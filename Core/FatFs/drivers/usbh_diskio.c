@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    sd_diskio.c
+  * @file    usbh_diskio.c 
   * @author  MCD Application Team
   * @version V1.4.1
   * @date    14-February-2017
-  * @brief   SD Disk I/O driver
+  * @brief   USB Key Disk I/O driver.
   ******************************************************************************
   * @attention
   *
@@ -45,40 +45,41 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdio.h>
 #include <string.h>
 #include "ff_gen_drv.h"
-
-#include "bsp_sdio_sdcard.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* Disk status */
-static volatile DSTATUS Stat = STA_NOINIT;
+extern USBH_HandleTypeDef  HOST_HANDLE;
+#if _USE_BUFF_WO_ALIGNMENT == 0
+/* Local buffer use to handle buffer not aligned 32bits*/
+static DWORD scratch[_MAX_SS / 4];
+#endif
 
 /* Private function prototypes -----------------------------------------------*/
-DSTATUS SD_initialize (BYTE);
-DSTATUS SD_status (BYTE);
-DRESULT SD_read (BYTE, BYTE*, DWORD, UINT);
+DSTATUS USBH_initialize (BYTE);
+DSTATUS USBH_status (BYTE);
+DRESULT USBH_read (BYTE, BYTE*, DWORD, UINT);
+
 #if _USE_WRITE == 1
-  DRESULT SD_write (BYTE, const BYTE*, DWORD, UINT);
+  DRESULT USBH_write (BYTE, const BYTE*, DWORD, UINT);
 #endif /* _USE_WRITE == 1 */
+
 #if _USE_IOCTL == 1
-  DRESULT SD_ioctl (BYTE, BYTE, void*);
-#endif  /* _USE_IOCTL == 1 */
+  DRESULT USBH_ioctl (BYTE, BYTE, void*);
+#endif /* _USE_IOCTL == 1 */
   
-const Diskio_drvTypeDef  SD_Driver =
+const Diskio_drvTypeDef  USBH_Driver =
 {
-  SD_initialize,
-  SD_status,
-  SD_read, 
+  USBH_initialize,
+  USBH_status,
+  USBH_read, 
 #if  _USE_WRITE == 1
-  SD_write,
-#endif /* _USE_WRITE == 1 */
-  
+  USBH_write,
+#endif /* _USE_WRITE == 1 */  
 #if  _USE_IOCTL == 1
-  SD_ioctl,
+  USBH_ioctl,
 #endif /* _USE_IOCTL == 1 */
 };
 
@@ -86,146 +87,228 @@ const Diskio_drvTypeDef  SD_Driver =
 
 /**
   * @brief  Initializes a Drive
-  * @param  lun : not used 
+  * @param  lun : lun id
   * @retval DSTATUS: Operation status
   */
-DSTATUS SD_initialize(BYTE lun)
+DSTATUS USBH_initialize(BYTE lun)
 {
-  Stat = STA_NOINIT;
-  
-  /* Configure the uSD device */
-  if(BSP_SD_Init() == MSD_OK)
-  {
-    Stat &= ~STA_NOINIT;
-  }
-
-  return Stat;
+  return RES_OK;
 }
 
 /**
   * @brief  Gets Disk Status
-  * @param  lun : not used
+  * @param  lun : lun id
   * @retval DSTATUS: Operation status
   */
-DSTATUS SD_status(BYTE lun)
+DSTATUS USBH_status(BYTE lun)
 {
-  Stat = STA_NOINIT;
-
-  if(BSP_SD_GetCardState() == MSD_OK)
+  DRESULT res = RES_ERROR;
+  
+  if(USBH_MSC_UnitIsReady(&HOST_HANDLE, lun))
   {
-    Stat &= ~STA_NOINIT;
+    res = RES_OK;
+  }
+  else
+  {
+    res = RES_ERROR;
   }
   
-  return Stat;
+  return res;
 }
 
 /**
-  * @brief  Reads Sector(s)
-  * @param  lun : not used
+  * @brief  Reads Sector(s) 
+  * @param  lun : lun id
   * @param  *buff: Data buffer to store read data
   * @param  sector: Sector address (LBA)
   * @param  count: Number of sectors to read (1..128)
   * @retval DRESULT: Operation result
   */
-DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
+DRESULT USBH_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 {
   DRESULT res = RES_ERROR;
-  uint32_t timeout = 100000;
-  printf("尝试读取扇区\r\n");
-  if(BSP_SD_ReadBlocks((uint32_t*)buff, 
-                       (uint32_t) (sector), 
-                       count, SD_DATATIMEOUT) == MSD_OK)
+  MSC_LUNTypeDef info;
+  USBH_StatusTypeDef  status = USBH_OK;
+
+  if ((DWORD)buff & 3) /* DMA Alignment issue, do single up to aligned buffer */
   {
-    while(BSP_SD_GetCardState()!= MSD_OK)
+#if _USE_BUFF_WO_ALIGNMENT == 0
+    while ((count--)&&(status == USBH_OK))
     {
-      if (timeout-- == 0)
+      status = USBH_MSC_Read(&HOST_HANDLE, lun, sector + count, (uint8_t *)scratch, 1);
+      if(status == USBH_OK)
       {
-        printf("SD read failed! FILE:sd_diskio \r\n");
-        return RES_ERROR;
+        memcpy (&buff[count * _MAX_SS] ,scratch, _MAX_SS);
+      }
+      else
+      {
+        break;
       }
     }
-    printf("SD read successed! FILE:sd_diskio \r\n");
+#else
+    return res;
+#endif
+  }
+  else
+  {
+    status = USBH_MSC_Read(&HOST_HANDLE, lun, sector, buff, count);
+  }
+  
+  if(status == USBH_OK)
+  {
     res = RES_OK;
   }
-  printf("SD read failed! FILE:sd_diskio \r\n");
+  else
+  {
+    USBH_MSC_GetLUNInfo(&HOST_HANDLE, lun, &info); 
+    
+    switch (info.sense.asc)
+    {
+    case SCSI_ASC_LOGICAL_UNIT_NOT_READY:
+    case SCSI_ASC_MEDIUM_NOT_PRESENT:
+    case SCSI_ASC_NOT_READY_TO_READY_CHANGE: 
+      USBH_ErrLog ("USB Disk is not ready!");  
+      res = RES_NOTRDY;
+      break; 
+      
+    default:
+      res = RES_ERROR;
+      break;
+    }
+  }
+  
   return res;
 }
 
 /**
   * @brief  Writes Sector(s)
-  * @param  lun : not used
+  * @param  lun : lun id 
   * @param  *buff: Data to be written
   * @param  sector: Sector address (LBA)
   * @param  count: Number of sectors to write (1..128)
   * @retval DRESULT: Operation result
   */
 #if _USE_WRITE == 1
-DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
+DRESULT USBH_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
 {
-  DRESULT res = RES_ERROR;
-  uint32_t timeout = 100000;
+  DRESULT res = RES_ERROR; 
+  MSC_LUNTypeDef info;
+  USBH_StatusTypeDef  status = USBH_OK;  
 
-  if(BSP_SD_WriteBlocks((uint32_t*)buff, 
-                        (uint32_t)(sector), 
-                        count, SD_DATATIMEOUT) == MSD_OK)
+  if ((DWORD)buff & 3) /* DMA Alignment issue, do single up to aligned buffer */
   {
-    while(BSP_SD_GetCardState()!= MSD_OK)
+#if _USE_BUFF_WO_ALIGNMENT == 0
+    while (count--)
     {
-      if (timeout-- == 0)
+      memcpy (scratch, &buff[count * _MAX_SS], _MAX_SS);
+      
+      status = USBH_MSC_Write(&HOST_HANDLE, lun, sector + count, (BYTE *)scratch, 1) ;
+      if(status == USBH_FAIL)
       {
-        return RES_ERROR;
+        break;
       }
-    }    
-    res = RES_OK;
+    }
+#else
+    return res;
+#endif
+  }
+  else
+  {
+    status = USBH_MSC_Write(&HOST_HANDLE, lun, sector, (BYTE *)buff, count);
   }
   
-  return res;
+  if(status == USBH_OK)
+  {
+    res = RES_OK;
+  }
+  else
+  {
+    USBH_MSC_GetLUNInfo(&HOST_HANDLE, lun, &info); 
+    
+    switch (info.sense.asc)
+    {
+    case SCSI_ASC_WRITE_PROTECTED:
+      USBH_ErrLog("USB Disk is Write protected!");
+      res = RES_WRPRT;
+      break;
+      
+    case SCSI_ASC_LOGICAL_UNIT_NOT_READY:
+    case SCSI_ASC_MEDIUM_NOT_PRESENT:
+    case SCSI_ASC_NOT_READY_TO_READY_CHANGE:
+      USBH_ErrLog("USB Disk is not ready!");      
+      res = RES_NOTRDY;
+      break; 
+      
+    default:
+      res = RES_ERROR;
+      break;
+    }
+  }
+  
+  return res;   
 }
 #endif /* _USE_WRITE == 1 */
 
 /**
   * @brief  I/O control operation
-  * @param  lun : not used
+  * @param  lun : lun id
   * @param  cmd: Control code
   * @param  *buff: Buffer to send/receive control data
   * @retval DRESULT: Operation result
   */
 #if _USE_IOCTL == 1
-DRESULT SD_ioctl(BYTE lun, BYTE cmd, void *buff)
+DRESULT USBH_ioctl(BYTE lun, BYTE cmd, void *buff)
 {
   DRESULT res = RES_ERROR;
-  BSP_SD_CardInfo CardInfo;
-  
-  if (Stat & STA_NOINIT) return RES_NOTRDY;
+  MSC_LUNTypeDef info;
   
   switch (cmd)
   {
   /* Make sure that no pending write process */
-  case CTRL_SYNC :
+  case CTRL_SYNC: 
     res = RES_OK;
     break;
-  
-  /* Get number of sectors on the disk (DWORD) */
-  case GET_SECTOR_COUNT :
-    BSP_SD_GetCardInfo(&CardInfo);
-    *(DWORD*)buff = CardInfo.LogBlockNbr;
-    res = RES_OK;
+    
+  /* Get number of sectors on the disk (DWORD) */  
+  case GET_SECTOR_COUNT : 
+    if(USBH_MSC_GetLUNInfo(&HOST_HANDLE, lun, &info) == USBH_OK)
+    {
+      *(DWORD*)buff = info.capacity.block_nbr;
+      res = RES_OK;
+    }
+    else
+    {
+      res = RES_ERROR;
+    }
     break;
-  
-  /* Get R/W sector size (WORD) */
-  case GET_SECTOR_SIZE :
-    BSP_SD_GetCardInfo(&CardInfo);
-    *(WORD*)buff = CardInfo.LogBlockSize;
-    res = RES_OK;
+    
+  /* Get R/W sector size (WORD) */  
+  case GET_SECTOR_SIZE :	
+    if(USBH_MSC_GetLUNInfo(&HOST_HANDLE, lun, &info) == USBH_OK)
+    {
+      *(DWORD*)buff = info.capacity.block_size;
+      res = RES_OK;
+    }
+    else
+    {
+      res = RES_ERROR;
+    }
     break;
-  
-  /* Get erase block size in unit of sector (DWORD) */
-  case GET_BLOCK_SIZE :
-    BSP_SD_GetCardInfo(&CardInfo);
-    *(DWORD*)buff = CardInfo.LogBlockSize;
-    res = RES_OK;
+    
+    /* Get erase block size in unit of sector (DWORD) */ 
+  case GET_BLOCK_SIZE : 
+    
+    if(USBH_MSC_GetLUNInfo(&HOST_HANDLE, lun, &info) == USBH_OK)
+    {
+      *(DWORD*)buff = info.capacity.block_size;
+      res = RES_OK;
+    }
+    else
+    {
+      res = RES_ERROR;
+    }
     break;
-  
+    
   default:
     res = RES_PARERR;
   }
@@ -233,6 +316,6 @@ DRESULT SD_ioctl(BYTE lun, BYTE cmd, void *buff)
   return res;
 }
 #endif /* _USE_IOCTL == 1 */
-  
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

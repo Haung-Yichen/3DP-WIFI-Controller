@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    sd_diskio.c
+  * @file    sram_diskio.c
   * @author  MCD Application Team
   * @version V1.4.1
   * @date    14-February-2017
-  * @brief   SD Disk I/O driver
+  * @brief   SRAM Disk I/O driver
   ******************************************************************************
   * @attention
   *
@@ -45,40 +45,39 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdio.h>
 #include <string.h>
 #include "ff_gen_drv.h"
 
-#include "bsp_sdio_sdcard.h"
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+/* Block Size in Bytes */
+#define BLOCK_SIZE                512
+
 /* Private variables ---------------------------------------------------------*/
 /* Disk status */
 static volatile DSTATUS Stat = STA_NOINIT;
 
 /* Private function prototypes -----------------------------------------------*/
-DSTATUS SD_initialize (BYTE);
-DSTATUS SD_status (BYTE);
-DRESULT SD_read (BYTE, BYTE*, DWORD, UINT);
+DSTATUS SRAMDISK_initialize (BYTE);
+DSTATUS SRAMDISK_status (BYTE);
+DRESULT SRAMDISK_read (BYTE, BYTE*, DWORD, UINT);
 #if _USE_WRITE == 1
-  DRESULT SD_write (BYTE, const BYTE*, DWORD, UINT);
+  DRESULT SRAMDISK_write (BYTE, const BYTE*, DWORD, UINT);
 #endif /* _USE_WRITE == 1 */
 #if _USE_IOCTL == 1
-  DRESULT SD_ioctl (BYTE, BYTE, void*);
-#endif  /* _USE_IOCTL == 1 */
+  DRESULT SRAMDISK_ioctl (BYTE, BYTE, void*);
+#endif /* _USE_IOCTL == 1 */
   
-const Diskio_drvTypeDef  SD_Driver =
+const Diskio_drvTypeDef SRAMDISK_Driver =
 {
-  SD_initialize,
-  SD_status,
-  SD_read, 
+  SRAMDISK_initialize,
+  SRAMDISK_status,
+  SRAMDISK_read, 
 #if  _USE_WRITE == 1
-  SD_write,
-#endif /* _USE_WRITE == 1 */
-  
+  SRAMDISK_write,
+#endif /* _USE_WRITE == 1 */  
 #if  _USE_IOCTL == 1
-  SD_ioctl,
+  SRAMDISK_ioctl,
 #endif /* _USE_IOCTL == 1 */
 };
 
@@ -89,12 +88,12 @@ const Diskio_drvTypeDef  SD_Driver =
   * @param  lun : not used 
   * @retval DSTATUS: Operation status
   */
-DSTATUS SD_initialize(BYTE lun)
+DSTATUS SRAMDISK_initialize(BYTE lun)
 {
   Stat = STA_NOINIT;
   
-  /* Configure the uSD device */
-  if(BSP_SD_Init() == MSD_OK)
+  /* Configure the SRAM device */
+  if (BSP_SRAM_Init() == SRAM_OK)
   {
     Stat &= ~STA_NOINIT;
   }
@@ -104,97 +103,69 @@ DSTATUS SD_initialize(BYTE lun)
 
 /**
   * @brief  Gets Disk Status
-  * @param  lun : not used
+  * @param  lun : not used 
   * @retval DSTATUS: Operation status
   */
-DSTATUS SD_status(BYTE lun)
+DSTATUS SRAMDISK_status(BYTE lun)
 {
-  Stat = STA_NOINIT;
-
-  if(BSP_SD_GetCardState() == MSD_OK)
-  {
-    Stat &= ~STA_NOINIT;
-  }
-  
   return Stat;
 }
 
 /**
   * @brief  Reads Sector(s)
-  * @param  lun : not used
+  * @param  lun : not used 
   * @param  *buff: Data buffer to store read data
   * @param  sector: Sector address (LBA)
   * @param  count: Number of sectors to read (1..128)
   * @retval DRESULT: Operation result
   */
-DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
+DRESULT SRAMDISK_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 {
-  DRESULT res = RES_ERROR;
-  uint32_t timeout = 100000;
-  printf("尝试读取扇区\r\n");
-  if(BSP_SD_ReadBlocks((uint32_t*)buff, 
-                       (uint32_t) (sector), 
-                       count, SD_DATATIMEOUT) == MSD_OK)
+  uint32_t BufferSize = (BLOCK_SIZE * count); 
+  uint8_t *pSramAddress = (uint8_t *) (SRAM_DEVICE_ADDR + (sector * BLOCK_SIZE)); 
+  
+  for(; BufferSize != 0; BufferSize--)
   {
-    while(BSP_SD_GetCardState()!= MSD_OK)
-    {
-      if (timeout-- == 0)
-      {
-        printf("SD read failed! FILE:sd_diskio \r\n");
-        return RES_ERROR;
-      }
-    }
-    printf("SD read successed! FILE:sd_diskio \r\n");
-    res = RES_OK;
-  }
-  printf("SD read failed! FILE:sd_diskio \r\n");
-  return res;
+    *buff++ = *(__IO uint8_t *)pSramAddress++;  
+  } 
+  
+  return RES_OK;
 }
 
 /**
   * @brief  Writes Sector(s)
-  * @param  lun : not used
+  * @param  lun : not used 
   * @param  *buff: Data to be written
   * @param  sector: Sector address (LBA)
   * @param  count: Number of sectors to write (1..128)
   * @retval DRESULT: Operation result
   */
 #if _USE_WRITE == 1
-DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
+DRESULT SRAMDISK_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
 {
-  DRESULT res = RES_ERROR;
-  uint32_t timeout = 100000;
-
-  if(BSP_SD_WriteBlocks((uint32_t*)buff, 
-                        (uint32_t)(sector), 
-                        count, SD_DATATIMEOUT) == MSD_OK)
-  {
-    while(BSP_SD_GetCardState()!= MSD_OK)
-    {
-      if (timeout-- == 0)
-      {
-        return RES_ERROR;
-      }
-    }    
-    res = RES_OK;
-  }
+  uint32_t BufferSize = (BLOCK_SIZE * count) + count; 
+  uint8_t *pSramAddress = (uint8_t *) (SRAM_DEVICE_ADDR + (sector * BLOCK_SIZE)); 
   
-  return res;
+  for(; BufferSize != 0; BufferSize--)
+  {
+    *(__IO uint8_t *)pSramAddress++ = *buff++;    
+  } 
+  
+  return RES_OK;
 }
 #endif /* _USE_WRITE == 1 */
 
 /**
   * @brief  I/O control operation
-  * @param  lun : not used
+  * @param  lun : not used 
   * @param  cmd: Control code
   * @param  *buff: Buffer to send/receive control data
   * @retval DRESULT: Operation result
   */
 #if _USE_IOCTL == 1
-DRESULT SD_ioctl(BYTE lun, BYTE cmd, void *buff)
+DRESULT SRAMDISK_ioctl(BYTE lun, BYTE cmd, void *buff)
 {
   DRESULT res = RES_ERROR;
-  BSP_SD_CardInfo CardInfo;
   
   if (Stat & STA_NOINIT) return RES_NOTRDY;
   
@@ -207,22 +178,19 @@ DRESULT SD_ioctl(BYTE lun, BYTE cmd, void *buff)
   
   /* Get number of sectors on the disk (DWORD) */
   case GET_SECTOR_COUNT :
-    BSP_SD_GetCardInfo(&CardInfo);
-    *(DWORD*)buff = CardInfo.LogBlockNbr;
+    *(DWORD*)buff = SRAM_DEVICE_SIZE / BLOCK_SIZE;
     res = RES_OK;
     break;
   
   /* Get R/W sector size (WORD) */
   case GET_SECTOR_SIZE :
-    BSP_SD_GetCardInfo(&CardInfo);
-    *(WORD*)buff = CardInfo.LogBlockSize;
+    *(WORD*)buff = BLOCK_SIZE;
     res = RES_OK;
     break;
   
   /* Get erase block size in unit of sector (DWORD) */
   case GET_BLOCK_SIZE :
-    BSP_SD_GetCardInfo(&CardInfo);
-    *(DWORD*)buff = CardInfo.LogBlockSize;
+    *(DWORD*)buff = BLOCK_SIZE;
     res = RES_OK;
     break;
   

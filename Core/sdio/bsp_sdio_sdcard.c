@@ -16,6 +16,7 @@
   */ 
 
 #include "bsp_sdio_sdcard.h"
+#include "usart.h"
 
   
 SD_HandleTypeDef uSdHandle;
@@ -307,16 +308,16 @@ __weak void BSP_SD_MspInit(void *Params)
   gpioinitstruct.Pin = GPIO_PIN_2;
   HAL_GPIO_Init(GPIOD, &gpioinitstruct);
 
-//  /* SD Card detect pin configuration */
-//  gpioinitstruct.Mode      = GPIO_MODE_INPUT;
-//  gpioinitstruct.Pull      = GPIO_PULLUP;
-//  gpioinitstruct.Speed     = GPIO_SPEED_FREQ_HIGH;
-//  gpioinitstruct.Pin       = SD_DETECT_PIN;
-//  HAL_GPIO_Init(SD_DETECT_GPIO_PORT, &gpioinitstruct);
+  /* SD Card detect pin configuration */
+  gpioinitstruct.Mode      = GPIO_MODE_INPUT;
+  gpioinitstruct.Pull      = GPIO_PULLUP;
+  gpioinitstruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+  gpioinitstruct.Pin       = SD_DETECT_PIN;
+  HAL_GPIO_Init(SD_DETECT_GPIO_PORT, &gpioinitstruct);
     
-//  /* NVIC configuration for SDIO interrupts */
-//  HAL_NVIC_SetPriority(SDIO_IRQn, 0xC, 0);
-//  HAL_NVIC_EnableIRQ(SDIO_IRQn);
+  /* NVIC configuration for SDIO interrupts */
+  HAL_NVIC_SetPriority(SDIO_IRQn, 0xC, 0);
+  HAL_NVIC_EnableIRQ(SDIO_IRQn);
   
   /* DMA initialization should be done here but , as there is only one channel for RX and TX it is configured and done directly when required*/
 }
@@ -342,11 +343,10 @@ uint8_t SD_DMAConfigRx(SD_HandleTypeDef *hsd)
     hdma_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
     hdma_rx.Init.MemDataAlignment    = DMA_MDATAALIGN_WORD;
     hdma_rx.Init.Priority            = DMA_PRIORITY_VERY_HIGH;
-
     hdma_rx.Instance = SD_DMAx_Rx_INSTANCE;
 
     /* Associate the DMA handle */
-    __HAL_LINKDMA(hsd, hdmarx, hdma_rx);
+    __HAL_LINKDMA(&uSdHandle, hdmarx, hdma_rx);
 
     /* Stop any ongoing transfer and reset the state*/
     HAL_DMA_Abort(&hdma_rx);
@@ -394,8 +394,8 @@ uint8_t SD_DMAConfigTx(SD_HandleTypeDef *hsd)
     hdma_tx.Instance = SD_DMAx_Tx_INSTANCE;
     
     /* Associate the DMA handle */
-    __HAL_LINKDMA(hsd, hdmatx, hdma_tx);
-    
+    __HAL_LINKDMA(&uSdHandle, hdmatx, hdma_tx);
+
     /* Stop any ongoing transfer and reset the state*/
     HAL_DMA_Abort(&hdma_tx);
     
