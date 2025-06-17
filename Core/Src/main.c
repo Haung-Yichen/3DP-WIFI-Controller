@@ -26,12 +26,13 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 #include "bsp_led.h"
 #include "bsp_sdio_sdcard.h"
 #include "ff.h"
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"
-#include <stdio.h>
+#include "sdio_test.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,7 +60,7 @@ FRESULT f_res; /* 檔案操作結果 */
 UINT fnum; /* 成功讀寫的位元組數 */
 BYTE ReadBuffer[1024] = {0}; /* 讀取緩衝區 */
 BYTE WriteBuffer[] =
-		        "歡迎使用野火STM32開發板，今天是個好日子，新建檔案系統測試檔案\r\n";
+		"歡迎使用野火STM32開發板，今天是個好日子，新建檔案系統測試檔案\r\n";
 
 /* USER CODE END PV */
 
@@ -70,7 +71,6 @@ void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN PFP */
 static void printf_fatfs_error(FRESULT fresult);
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -80,7 +80,7 @@ static void printf_fatfs_error(FRESULT fresult);
 
 /**
  * @brief  The application entry point.
-* @retval int
+ * @retval int
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
@@ -94,7 +94,7 @@ int main(void) {
 	HAL_Init();
 
 	/* USER CODE BEGIN Init */
-        LED_GPIO_Config();
+	LED_GPIO_Config();
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -112,7 +112,82 @@ int main(void) {
 	MX_USART3_UART_Init();
 	MX_USB_PCD_Init();
 	/* USER CODE BEGIN 2 */
+	printf("\r\r\n****** 这是一个SD卡 文件系统实验 ******\r\r\n");
+	SD_Test();
+	/* 注册一个FatFS设备：SD卡 */
+	if (FATFS_LinkDriver(&SD_Driver, SDPath) == 0) {
 
+		//在SD卡挂载文件系统，文件系统挂载时会对SD卡初始化
+		f_res = f_mount(&fs, (TCHAR const *) SDPath, 1);
+		printf_fatfs_error(f_res);
+		/*----------------------- 格式化测试 ---------------------------*/
+		/* 如果没有文件系统就格式化创建创建文件系统 */
+		if (f_res == FR_NO_FILESYSTEM) {
+			printf("》SD卡还没有文件系统，即将进行格式化...\r\n");
+			/* 格式化 */
+			f_res = f_mkfs((TCHAR const *) SDPath, 0, 0);
+
+			if (f_res == FR_OK) {
+				printf("》SD卡已成功格式化文件系统。\r\n");
+				/* 格式化后，先取消挂载 */
+				f_res = f_mount(NULL, (TCHAR const *) SDPath, 1);
+				/* 重新挂载	*/
+				f_res = f_mount(&fs, (TCHAR const *) SDPath, 1);
+			} else {
+				printf("《《格式化失败。》》\r\n");
+				while (1);
+			}
+		} else if (f_res != FR_OK) {
+			printf("！！SD卡挂载文件系统失败。(%d)\r\n", f_res);
+			printf_fatfs_error(f_res);
+			while (1);
+		} else {
+			printf("》文件系统挂载成功，可以进行读写测试\r\n");
+		}
+
+		/*----------------------- 文件系统测试：写测试 -----------------------------*/
+		/* 打开文件，如果文件不存在则创建它 */
+		printf("****** 即将进行文件写入测试... ******\r\n");
+		f_res = f_open(&file, "FatFs读写测试文件.txt",FA_CREATE_ALWAYS | FA_WRITE);
+		if (f_res == FR_OK) {
+			printf("》打开/创建FatFs读写测试文件.txt文件成功，向文件写入数据。\r\n");
+			/* 将指定存储区内容写入到文件内 */
+			f_res = f_write(&file, WriteBuffer, sizeof(WriteBuffer), &fnum);
+			if (f_res == FR_OK) {
+				printf("》文件写入成功，写入字节数据：%d\r\n", fnum);
+				printf("》向文件写入的数据为：\r\n%s\r\n", WriteBuffer);
+			} else {
+				printf("！！文件写入失败：(%d)\r\n", f_res);
+			}
+			/* 不再读写，关闭文件 */
+			f_close(&file);
+		} else {
+			printf("！！打开/创建文件失败。\r\n");
+		}
+
+		/*------------------- 文件系统测试：读测试 ------------------------------------*/
+		printf("****** 即将进行文件读取测试... ******\r\n");
+		f_res = f_open(&file, "FatFs读写测试文件.txt", FA_OPEN_EXISTING | FA_READ);
+		if (f_res == FR_OK) {
+			printf("》打开文件成功。\r\n");
+			f_res = f_read(&file, ReadBuffer, sizeof(ReadBuffer), &fnum);
+			if (f_res == FR_OK) {
+				printf("》文件读取成功,读到字节数据：%d\r\n", fnum);
+				printf("》读取得的文件数据为：\r\n%s \r\n", ReadBuffer);
+			} else {
+				printf("！！文件读取失败：(%d)\r\n", f_res);
+			}
+		} else {
+			printf("！！打开文件失败。\r\n");
+		}
+		/* 不再读写，关闭文件 */
+		f_close(&file);
+
+		/* 不再使用，取消挂载 */
+		f_res = f_mount(NULL, (TCHAR const *) SDPath, 1);
+	}
+	/* 注销一个FatFS设备：SD卡 */
+	FATFS_UnLinkDriver(SDPath);
 	/* USER CODE END 2 */
 
 	/* Init scheduler */
@@ -137,69 +212,69 @@ int main(void) {
 }
 
 /**
- * @brief  列印輸出 FatFs 錯誤資訊
- * @param  fresult：FatFs 返回值
- * @retval 無
- */
+  * @brief  打印输出信息
+  * @param  无
+  * @retval 无
+  */
 static void printf_fatfs_error(FRESULT fresult) {
 	switch (fresult) {
 		case FR_OK:
 			printf("》操作成功。\r\n");
 			break;
 		case FR_DISK_ERR:
-			printf("！！硬體輸入輸出驅動錯誤。\r\n");
+			printf("！！硬件输入输出驱动出错。\r\n");
 			break;
 		case FR_INT_ERR:
-			printf("！！斷言錯誤。\r\n");
+			printf("！！断言错误。\r\n");
 			break;
 		case FR_NOT_READY:
-			printf("！！物理裝置無法運作。\r\n");
+			printf("！！物理设备无法工作。\r\n");
 			break;
 		case FR_NO_FILE:
-			printf("！！找不到檔案。\r\n");
+			printf("！！无法找到文件。\r\n");
 			break;
 		case FR_NO_PATH:
-			printf("！！找不到路徑。\r\n");
+			printf("！！无法找到路径。\r\n");
 			break;
 		case FR_INVALID_NAME:
-			printf("！！無效的路徑名稱。\r\n");
+			printf("！！无效的路径名。\r\n");
 			break;
 		case FR_DENIED:
 		case FR_EXIST:
-			printf("！！拒絕存取。\r\n");
+			printf("！！拒绝访问。\r\n");
 			break;
 		case FR_INVALID_OBJECT:
-			printf("！！無效的檔案或路徑。\r\n");
+			printf("！！无效的文件或路径。\r\n");
 			break;
 		case FR_WRITE_PROTECTED:
-			printf("！！邏輯裝置為寫入保護狀態。\r\n");
+			printf("！！逻辑设备写保护。\r\n");
 			break;
 		case FR_INVALID_DRIVE:
-			printf("！！無效的邏輯裝置。\r\n");
+			printf("！！无效的逻辑设备。\r\n");
 			break;
 		case FR_NOT_ENABLED:
-			printf("！！無效的工作區域。\r\n");
+			printf("！！无效的工作区。\r\n");
 			break;
 		case FR_NO_FILESYSTEM:
-			printf("！！無效的檔案系統。\r\n");
+			printf("！！无效的文件系统。\r\n");
 			break;
 		case FR_MKFS_ABORTED:
-			printf("！！因為函式參數問題導致 f_mkfs 執行失敗。\r\n");
+			printf("！！因函数参数问题导致f_mkfs函数操作失败。\r\n");
 			break;
 		case FR_TIMEOUT:
-			printf("！！操作逾時。\r\n");
+			printf("！！操作超时。\r\n");
 			break;
 		case FR_LOCKED:
-			printf("！！檔案已被鎖定或保護。\r\n");
+			printf("！！文件被保护。\r\n");
 			break;
 		case FR_NOT_ENOUGH_CORE:
-			printf("！！長檔案名稱支援無法分配堆疊空間。\r\n");
+			printf("！！长文件名支持获取堆空间失败。\r\n");
 			break;
 		case FR_TOO_MANY_OPEN_FILES:
-			printf("！！開啟太多檔案。\r\n");
+			printf("！！打开太多文件。\r\n");
 			break;
 		case FR_INVALID_PARAMETER:
-			printf("！！無效的參數。\r\n");
+			printf("！！参数无效。\r\n");
 			break;
 	}
 }

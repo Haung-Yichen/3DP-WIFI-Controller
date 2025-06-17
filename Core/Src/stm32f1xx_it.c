@@ -18,10 +18,13 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "stm32f1xx_it.h"
+
 #include "FreeRTOS.h"
+#include "main.h"
 #include "task.h"
+#include "usart.h"
+#include "bsp_sdio_sdcard.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -256,6 +259,18 @@ void USART2_IRQHandler(void)
   /* USER CODE END USART2_IRQn 1 */
 }
 
+void USART3_IRQHandler(void) {
+  HAL_UART_IRQHandler(&huart3);
+}
+
 /* USER CODE BEGIN 1 */
+void SDIO_IRQHandler(void) {
+  HAL_SD_IRQHandler(&uSdHandle);
+}
+
+void DMA2_Channel4_5_IRQHandler(void) {
+  HAL_DMA_IRQHandler(uSdHandle.hdmarx);
+  HAL_DMA_IRQHandler(uSdHandle.hdmatx);
+}
 
 /* USER CODE END 1 */
