@@ -61,7 +61,6 @@ UINT fnum; /* 成功讀寫的位元組數 */
 BYTE ReadBuffer[1024] = {0}; /* 讀取緩衝區 */
 BYTE WriteBuffer[] =
 		"歡迎使用野火STM32開發板，今天是個好日子，新建檔案系統測試檔案\r\n";
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,6 +70,7 @@ void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN PFP */
 static void printf_fatfs_error(FRESULT fresult);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -116,7 +116,6 @@ int main(void) {
 	SD_Test();
 	/* 注册一个FatFS设备：SD卡 */
 	if (FATFS_LinkDriver(&SD_Driver, SDPath) == 0) {
-
 		//在SD卡挂载文件系统，文件系统挂载时会对SD卡初始化
 		f_res = f_mount(&fs, (TCHAR const *) SDPath, 1);
 		printf_fatfs_error(f_res);
@@ -124,9 +123,10 @@ int main(void) {
 		/* 如果没有文件系统就格式化创建创建文件系统 */
 		if (f_res == FR_NO_FILESYSTEM) {
 			printf("》SD卡还没有文件系统，即将进行格式化...\r\n");
+			printf("SDPath = %s\r\n", SDPath);
 			/* 格式化 */
-			f_res = f_mkfs((TCHAR const *) SDPath, 0, 0);
-
+			f_res = f_mkfs((const TCHAR*) 0, 0, 0);
+			printf_fatfs_error(f_res);
 			if (f_res == FR_OK) {
 				printf("》SD卡已成功格式化文件系统。\r\n");
 				/* 格式化后，先取消挂载 */

@@ -45,8 +45,9 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdio.h>
 #include <string.h>
+
+#include "bsp_sdio_sdcard.h"
 #include "ff_gen_drv.h"
 
 #include "bsp_sdio_sdcard.h"
@@ -131,7 +132,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 {
   DRESULT res = RES_ERROR;
   uint32_t timeout = 100000;
-  printf("尝试读取扇区\r\n");
+
   if(BSP_SD_ReadBlocks((uint32_t*)buff, 
                        (uint32_t) (sector), 
                        count, SD_DATATIMEOUT) == MSD_OK)
@@ -140,14 +141,12 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
     {
       if (timeout-- == 0)
       {
-        printf("SD read failed! FILE:sd_diskio \r\n");
         return RES_ERROR;
       }
     }
-    printf("SD read successed! FILE:sd_diskio \r\n");
     res = RES_OK;
   }
-  printf("SD read failed! FILE:sd_diskio \r\n");
+  
   return res;
 }
 

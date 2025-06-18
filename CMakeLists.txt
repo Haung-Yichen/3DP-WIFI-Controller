@@ -39,11 +39,11 @@ add_executable(${CMAKE_PROJECT_NAME}
         Core/FatFs/diskio.c
         Core/FatFs/ff.c
         Core/FatFs/ff_gen_drv.c
-        Core/FatFs/option/ccsbcs.c
         Core/FatFs/option/syscall.c
         Core/FatFs/drivers/sd_diskio.c
         Core/sdio/bsp_sdio_sdcard.c
-        Core/sdio/sdio_test.c)
+        Core/sdio/sdio_test.c
+        Core/FatFs/option/ccsbcs.c)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

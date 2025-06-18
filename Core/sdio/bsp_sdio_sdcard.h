@@ -12,7 +12,7 @@
 #define MSD_OK         ((uint8_t)0x00)
 #define MSD_ERROR      ((uint8_t)0x01)
 
-extern SD_HandleTypeDef uSdHandle;
+
 /** 
   * @brief  SD transfer state definition  
   */     

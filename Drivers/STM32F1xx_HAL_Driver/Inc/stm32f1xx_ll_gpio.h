@@ -2,23 +2,42 @@
   ******************************************************************************
   * @file    stm32f1xx_ll_gpio.h
   * @author  MCD Application Team
+  * @version V1.1.1
+  * @date    12-May-2017
   * @brief   Header file of GPIO LL module.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.
+  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *   1. Redistributions of source code must retain the above copyright notice,
+  *      this list of conditions and the following disclaimer.
+  *   2. Redistributions in binary form must reproduce the above copyright notice,
+  *      this list of conditions and the following disclaimer in the documentation
+  *      and/or other materials provided with the distribution.
+  *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  *      may be used to endorse or promote products derived from this software
+  *      without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef STM32F1xx_LL_GPIO_H
-#define STM32F1xx_LL_GPIO_H
+#ifndef __STM32F1xx_LL_GPIO_H
+#define __STM32F1xx_LL_GPIO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,17 +58,15 @@ extern "C" {
 
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* Private constants ---------------------------------------------------------*/
 
+/* Private constants ---------------------------------------------------------*/
 /** @defgroup GPIO_LL_Private_Constants GPIO Private Constants
   * @{
   */
-/* Defines used for Pin Mask Initialization */
-#define GPIO_PIN_MASK_POS   8U
-#define GPIO_PIN_NB         16U
 /**
   * @}
   */
+
 
 /* Private macros ------------------------------------------------------------*/
 #if defined(USE_FULL_LL_DRIVER)
@@ -95,7 +112,7 @@ typedef struct
                               This parameter can be a value of @ref GPIO_LL_EC_PULL.
 
                               GPIO HW configuration can be modified afterwards using unitary function @ref LL_GPIO_SetPinPull().*/
-} LL_GPIO_InitTypeDef;
+}LL_GPIO_InitTypeDef;
 
 /**
   * @}
@@ -110,28 +127,28 @@ typedef struct
 /** @defgroup GPIO_LL_EC_PIN PIN
   * @{
   */
-#define LL_GPIO_PIN_0                    ((GPIO_BSRR_BS0  << GPIO_PIN_MASK_POS) | 0x00000001U)  /*!< Select pin 0  */
-#define LL_GPIO_PIN_1                    ((GPIO_BSRR_BS1  << GPIO_PIN_MASK_POS) | 0x00000002U)  /*!< Select pin 1  */
-#define LL_GPIO_PIN_2                    ((GPIO_BSRR_BS2  << GPIO_PIN_MASK_POS) | 0x00000004U)  /*!< Select pin 2  */
-#define LL_GPIO_PIN_3                    ((GPIO_BSRR_BS3  << GPIO_PIN_MASK_POS) | 0x00000008U)  /*!< Select pin 3  */
-#define LL_GPIO_PIN_4                    ((GPIO_BSRR_BS4  << GPIO_PIN_MASK_POS) | 0x00000010U)  /*!< Select pin 4  */
-#define LL_GPIO_PIN_5                    ((GPIO_BSRR_BS5  << GPIO_PIN_MASK_POS) | 0x00000020U)  /*!< Select pin 5  */
-#define LL_GPIO_PIN_6                    ((GPIO_BSRR_BS6  << GPIO_PIN_MASK_POS) | 0x00000040U)  /*!< Select pin 6  */
-#define LL_GPIO_PIN_7                    ((GPIO_BSRR_BS7  << GPIO_PIN_MASK_POS) | 0x00000080U)  /*!< Select pin 7  */
-#define LL_GPIO_PIN_8                    ((GPIO_BSRR_BS8  << GPIO_PIN_MASK_POS) | 0x04000001U)  /*!< Select pin 8  */
-#define LL_GPIO_PIN_9                    ((GPIO_BSRR_BS9  << GPIO_PIN_MASK_POS) | 0x04000002U)  /*!< Select pin 9  */
-#define LL_GPIO_PIN_10                   ((GPIO_BSRR_BS10 << GPIO_PIN_MASK_POS) | 0x04000004U)  /*!< Select pin 10 */
-#define LL_GPIO_PIN_11                   ((GPIO_BSRR_BS11 << GPIO_PIN_MASK_POS) | 0x04000008U)  /*!< Select pin 11 */
-#define LL_GPIO_PIN_12                   ((GPIO_BSRR_BS12 << GPIO_PIN_MASK_POS) | 0x04000010U)  /*!< Select pin 12 */
-#define LL_GPIO_PIN_13                   ((GPIO_BSRR_BS13 << GPIO_PIN_MASK_POS) | 0x04000020U)  /*!< Select pin 13 */
-#define LL_GPIO_PIN_14                   ((GPIO_BSRR_BS14 << GPIO_PIN_MASK_POS) | 0x04000040U)  /*!< Select pin 14 */
-#define LL_GPIO_PIN_15                   ((GPIO_BSRR_BS15 << GPIO_PIN_MASK_POS) | 0x04000080U)  /*!< Select pin 15 */
+#define LL_GPIO_PIN_0                    (GPIO_BSRR_BS0 << 8)  | 0x00000001U  /*!< Select pin 0 */
+#define LL_GPIO_PIN_1                    (GPIO_BSRR_BS1 << 8)  | 0x00000002U  /*!< Select pin 1 */
+#define LL_GPIO_PIN_2                    (GPIO_BSRR_BS2 << 8)  | 0x00000004U  /*!< Select pin 2 */
+#define LL_GPIO_PIN_3                    (GPIO_BSRR_BS3 << 8)  | 0x00000008U  /*!< Select pin 3 */
+#define LL_GPIO_PIN_4                    (GPIO_BSRR_BS4 << 8)  | 0x00000010U  /*!< Select pin 4 */
+#define LL_GPIO_PIN_5                    (GPIO_BSRR_BS5 << 8)  | 0x00000020U  /*!< Select pin 5 */
+#define LL_GPIO_PIN_6                    (GPIO_BSRR_BS6 << 8)  | 0x00000040U  /*!< Select pin 6 */
+#define LL_GPIO_PIN_7                    (GPIO_BSRR_BS7 << 8)  | 0x00000080U  /*!< Select pin 7 */
+#define LL_GPIO_PIN_8                    (GPIO_BSRR_BS8 << 8)  | 0x04000001U  /*!< Select pin 8 */
+#define LL_GPIO_PIN_9                    (GPIO_BSRR_BS9 << 8)  | 0x04000002U  /*!< Select pin 9 */
+#define LL_GPIO_PIN_10                   (GPIO_BSRR_BS10 << 8) | 0x04000004U  /*!< Select pin 10 */
+#define LL_GPIO_PIN_11                   (GPIO_BSRR_BS11 << 8) | 0x04000008U  /*!< Select pin 11 */
+#define LL_GPIO_PIN_12                   (GPIO_BSRR_BS12 << 8) | 0x04000010U  /*!< Select pin 12 */
+#define LL_GPIO_PIN_13                   (GPIO_BSRR_BS13 << 8) | 0x04000020U  /*!< Select pin 13 */
+#define LL_GPIO_PIN_14                   (GPIO_BSRR_BS14 << 8) | 0x04000040U  /*!< Select pin 14 */
+#define LL_GPIO_PIN_15                   (GPIO_BSRR_BS15 << 8) | 0x04000080U  /*!< Select pin 15 */
 #define LL_GPIO_PIN_ALL                  (LL_GPIO_PIN_0  | LL_GPIO_PIN_1  | LL_GPIO_PIN_2  | \
                                           LL_GPIO_PIN_3  | LL_GPIO_PIN_4  | LL_GPIO_PIN_5  | \
                                           LL_GPIO_PIN_6  | LL_GPIO_PIN_7  | LL_GPIO_PIN_8  | \
                                           LL_GPIO_PIN_9  | LL_GPIO_PIN_10 | LL_GPIO_PIN_11 | \
                                           LL_GPIO_PIN_12 | LL_GPIO_PIN_13 | LL_GPIO_PIN_14 | \
-                                          LL_GPIO_PIN_15)                                      /*!< Select all pins */
+                                          LL_GPIO_PIN_15) /*!< Select all pins */
 /**
   * @}
   */
@@ -139,11 +156,11 @@ typedef struct
 /** @defgroup GPIO_LL_EC_MODE Mode
   * @{
   */
-#define LL_GPIO_MODE_ANALOG              0x00000000U       /*!< Select analog mode */
-#define LL_GPIO_MODE_FLOATING            GPIO_CRL_CNF0_0   /*!< Select floating mode */
-#define LL_GPIO_MODE_INPUT               GPIO_CRL_CNF0_1   /*!< Select input mode */
-#define LL_GPIO_MODE_OUTPUT              GPIO_CRL_MODE0_0  /*!< Select general purpose output mode */
-#define LL_GPIO_MODE_ALTERNATE           (GPIO_CRL_CNF0_1 | GPIO_CRL_MODE0_0) /*!< Select alternate function mode */
+#define LL_GPIO_MODE_ANALOG                0x00000000U   /*!< Select analog mode */
+#define LL_GPIO_MODE_FLOATING              GPIO_CRL_CNF0_0   /*!< Select floating mode */
+#define LL_GPIO_MODE_INPUT                 GPIO_CRL_CNF0_1   /*!< Select input mode */
+#define LL_GPIO_MODE_OUTPUT                GPIO_CRL_MODE0_0   /*!< Select general purpose output mode */
+#define LL_GPIO_MODE_ALTERNATE             (GPIO_CRL_CNF0_1 | GPIO_CRL_MODE0_0) /*!< Select alternate function mode */
 /**
   * @}
   */
@@ -151,8 +168,8 @@ typedef struct
 /** @defgroup GPIO_LL_EC_OUTPUT Output Type
   * @{
   */
-#define LL_GPIO_OUTPUT_PUSHPULL          0x00000000U                /*!< Select push-pull as output type */
-#define LL_GPIO_OUTPUT_OPENDRAIN         GPIO_CRL_CNF0_0            /*!< Select open-drain as output type */
+#define LL_GPIO_OUTPUT_PUSHPULL            0x00000000U /*!< Select push-pull as output type */
+#define LL_GPIO_OUTPUT_OPENDRAIN           GPIO_CRL_CNF0_0 /*!< Select open-drain as output type */
 /**
   * @}
   */
@@ -160,13 +177,13 @@ typedef struct
 /** @defgroup GPIO_LL_EC_SPEED Output Speed
   * @{
   */
-#define LL_GPIO_MODE_OUTPUT_10MHz        GPIO_CRL_MODE0_0            /*!< Select Output mode, max speed 10 MHz */
-#define LL_GPIO_MODE_OUTPUT_2MHz         GPIO_CRL_MODE0_1            /*!< Select Output mode, max speed 20 MHz */
-#define LL_GPIO_MODE_OUTPUT_50MHz        GPIO_CRL_MODE0              /*!< Select Output mode, max speed 50 MHz */
+#define LL_GPIO_MODE_OUTPUT_10MHz      GPIO_CRL_MODE0_0            /*!< Select Output mode, max speed 10 MHz */
+#define LL_GPIO_MODE_OUTPUT_2MHz       GPIO_CRL_MODE0_1            /*!< Select Output mode, max speed 20 MHz */
+#define LL_GPIO_MODE_OUTPUT_50MHz      GPIO_CRL_MODE0              /*!< Select Output mode, max speed 50 MHz */
 /**
   * @}
   */
-
+  
 #define LL_GPIO_SPEED_FREQ_LOW           LL_GPIO_MODE_OUTPUT_2MHz    /*!< Select I/O low output speed    */
 #define LL_GPIO_SPEED_FREQ_MEDIUM        LL_GPIO_MODE_OUTPUT_10MHz   /*!< Select I/O medium output speed */
 #define LL_GPIO_SPEED_FREQ_HIGH          LL_GPIO_MODE_OUTPUT_50MHz   /*!< Select I/O high output speed   */
@@ -174,13 +191,13 @@ typedef struct
 /** @defgroup GPIO_LL_EC_PULL Pull Up Pull Down
   * @{
   */
-#define LL_GPIO_PULL_DOWN                0x00000000U    /*!< Select I/O pull down */
-#define LL_GPIO_PULL_UP                  GPIO_ODR_ODR0  /*!< Select I/O pull up */
+#define LL_GPIO_PULL_DOWN                  0x00000000U    /*!< Select I/O pull down */
+#define LL_GPIO_PULL_UP                    GPIO_ODR_ODR0  /*!< Select I/O pull up */
 
 /**
   * @}
   */
-
+  
 /** @defgroup GPIO_LL_EVENTOUT_PIN EVENTOUT Pin
   * @{
   */
@@ -223,13 +240,13 @@ typedef struct
 /** @defgroup GPIO_LL_EC_EXTI_PORT GPIO EXTI PORT
   * @{
   */
-#define LL_GPIO_AF_EXTI_PORTA            0U   /*!< EXTI PORT A */
-#define LL_GPIO_AF_EXTI_PORTB            1U   /*!< EXTI PORT B */
-#define LL_GPIO_AF_EXTI_PORTC            2U   /*!< EXTI PORT C */
-#define LL_GPIO_AF_EXTI_PORTD            3U   /*!< EXTI PORT D */
-#define LL_GPIO_AF_EXTI_PORTE            4U   /*!< EXTI PORT E */
-#define LL_GPIO_AF_EXTI_PORTF            5U   /*!< EXTI PORT F */
-#define LL_GPIO_AF_EXTI_PORTG            6U   /*!< EXTI PORT G */
+#define LL_GPIO_AF_EXTI_PORTA            (uint32_t)0   /*!< EXTI PORT A */
+#define LL_GPIO_AF_EXTI_PORTB            (uint32_t)1   /*!< EXTI PORT B */
+#define LL_GPIO_AF_EXTI_PORTC            (uint32_t)2   /*!< EXTI PORT C */
+#define LL_GPIO_AF_EXTI_PORTD            (uint32_t)3   /*!< EXTI PORT D */
+#define LL_GPIO_AF_EXTI_PORTE            (uint32_t)4   /*!< EXTI PORT E */
+#define LL_GPIO_AF_EXTI_PORTF            (uint32_t)5   /*!< EXTI PORT F */
+#define LL_GPIO_AF_EXTI_PORTG            (uint32_t)6   /*!< EXTI PORT G */
 /**
   * @}
   */
@@ -237,22 +254,22 @@ typedef struct
 /** @defgroup GPIO_LL_EC_EXTI_LINE GPIO EXTI LINE
   * @{
   */
-#define LL_GPIO_AF_EXTI_LINE0            (0x000FU << 16U | 0U)  /*!< EXTI_POSITION_0  | EXTICR[0] */
-#define LL_GPIO_AF_EXTI_LINE1            (0x00F0U << 16U | 0U)  /*!< EXTI_POSITION_4  | EXTICR[0] */
-#define LL_GPIO_AF_EXTI_LINE2            (0x0F00U << 16U | 0U)  /*!< EXTI_POSITION_8  | EXTICR[0] */
-#define LL_GPIO_AF_EXTI_LINE3            (0xF000U << 16U | 0U)  /*!< EXTI_POSITION_12 | EXTICR[0] */
-#define LL_GPIO_AF_EXTI_LINE4            (0x000FU << 16U | 1U)  /*!< EXTI_POSITION_0  | EXTICR[1] */
-#define LL_GPIO_AF_EXTI_LINE5            (0x00F0U << 16U | 1U)  /*!< EXTI_POSITION_4  | EXTICR[1] */
-#define LL_GPIO_AF_EXTI_LINE6            (0x0F00U << 16U | 1U)  /*!< EXTI_POSITION_8  | EXTICR[1] */
-#define LL_GPIO_AF_EXTI_LINE7            (0xF000U << 16U | 1U)  /*!< EXTI_POSITION_12 | EXTICR[1] */
-#define LL_GPIO_AF_EXTI_LINE8            (0x000FU << 16U | 2U)  /*!< EXTI_POSITION_0  | EXTICR[2] */
-#define LL_GPIO_AF_EXTI_LINE9            (0x00F0U << 16U | 2U)  /*!< EXTI_POSITION_4  | EXTICR[2] */
-#define LL_GPIO_AF_EXTI_LINE10           (0x0F00U << 16U | 2U)  /*!< EXTI_POSITION_8  | EXTICR[2] */
-#define LL_GPIO_AF_EXTI_LINE11           (0xF000U << 16U | 2U)  /*!< EXTI_POSITION_12 | EXTICR[2] */
-#define LL_GPIO_AF_EXTI_LINE12           (0x000FU << 16U | 3U)  /*!< EXTI_POSITION_0  | EXTICR[3] */
-#define LL_GPIO_AF_EXTI_LINE13           (0x00F0U << 16U | 3U)  /*!< EXTI_POSITION_4  | EXTICR[3] */
-#define LL_GPIO_AF_EXTI_LINE14           (0x0F00U << 16U | 3U)  /*!< EXTI_POSITION_8  | EXTICR[3] */
-#define LL_GPIO_AF_EXTI_LINE15           (0xF000U << 16U | 3U)  /*!< EXTI_POSITION_12 | EXTICR[3] */
+#define LL_GPIO_AF_EXTI_LINE0            (uint32_t)(0x000FU << 16 | 0)  /*!< EXTI_POSITION_0  | EXTICR[0] */
+#define LL_GPIO_AF_EXTI_LINE1            (uint32_t)(0x00F0U << 16 | 0)  /*!< EXTI_POSITION_4  | EXTICR[0] */
+#define LL_GPIO_AF_EXTI_LINE2            (uint32_t)(0x0F00U << 16 | 0)  /*!< EXTI_POSITION_8  | EXTICR[0] */
+#define LL_GPIO_AF_EXTI_LINE3            (uint32_t)(0xF000U << 16 | 0)  /*!< EXTI_POSITION_12 | EXTICR[0] */
+#define LL_GPIO_AF_EXTI_LINE4            (uint32_t)(0x000FU << 16 | 1)  /*!< EXTI_POSITION_0  | EXTICR[1] */
+#define LL_GPIO_AF_EXTI_LINE5            (uint32_t)(0x00F0U << 16 | 1)  /*!< EXTI_POSITION_4  | EXTICR[1] */
+#define LL_GPIO_AF_EXTI_LINE6            (uint32_t)(0x0F00U << 16 | 1)  /*!< EXTI_POSITION_8  | EXTICR[1] */
+#define LL_GPIO_AF_EXTI_LINE7            (uint32_t)(0xF000U << 16 | 1)  /*!< EXTI_POSITION_12 | EXTICR[1] */
+#define LL_GPIO_AF_EXTI_LINE8            (uint32_t)(0x000FU << 16 | 2)  /*!< EXTI_POSITION_0  | EXTICR[2] */
+#define LL_GPIO_AF_EXTI_LINE9            (uint32_t)(0x00F0U << 16 | 2)  /*!< EXTI_POSITION_4  | EXTICR[2] */
+#define LL_GPIO_AF_EXTI_LINE10           (uint32_t)(0x0F00U << 16 | 2)  /*!< EXTI_POSITION_8  | EXTICR[2] */
+#define LL_GPIO_AF_EXTI_LINE11           (uint32_t)(0xF000U << 16 | 2)  /*!< EXTI_POSITION_12 | EXTICR[2] */
+#define LL_GPIO_AF_EXTI_LINE12           (uint32_t)(0x000FU << 16 | 3)  /*!< EXTI_POSITION_0  | EXTICR[3] */
+#define LL_GPIO_AF_EXTI_LINE13           (uint32_t)(0x00F0U << 16 | 3)  /*!< EXTI_POSITION_4  | EXTICR[3] */
+#define LL_GPIO_AF_EXTI_LINE14           (uint32_t)(0x0F00U << 16 | 3)  /*!< EXTI_POSITION_8  | EXTICR[3] */
+#define LL_GPIO_AF_EXTI_LINE15           (uint32_t)(0xF000U << 16 | 3)  /*!< EXTI_POSITION_12 | EXTICR[3] */
 /**
   * @}
   */
@@ -340,8 +357,8 @@ typedef struct
   */
 __STATIC_INLINE void LL_GPIO_SetPinMode(GPIO_TypeDef *GPIOx, uint32_t Pin, uint32_t Mode)
 {
-  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin >> 24)));
-  MODIFY_REG(*pReg, ((GPIO_CRL_CNF0 | GPIO_CRL_MODE0) << (POSITION_VAL(Pin) * 4U)), (Mode << (POSITION_VAL(Pin) * 4U)));
+  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin>>24)));
+  MODIFY_REG(*pReg, ((GPIO_CRL_CNF0|GPIO_CRL_MODE0) << (POSITION_VAL(Pin) * 4U)), (Mode << (POSITION_VAL(Pin) * 4U)));
 }
 
 /**
@@ -380,8 +397,9 @@ __STATIC_INLINE void LL_GPIO_SetPinMode(GPIO_TypeDef *GPIOx, uint32_t Pin, uint3
   */
 __STATIC_INLINE uint32_t LL_GPIO_GetPinMode(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin >> 24)));
-  return (READ_BIT(*pReg, ((GPIO_CRL_CNF0 | GPIO_CRL_MODE0) << (POSITION_VAL(Pin) * 4U))) >> (POSITION_VAL(Pin) * 4U));
+  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin>>24)));
+  return (uint32_t)(READ_BIT(*pReg,
+                             ((GPIO_CRL_CNF0|GPIO_CRL_MODE0) << (POSITION_VAL(Pin) * 4U))) >> (POSITION_VAL(Pin) * 4U));
 }
 
 /**
@@ -418,7 +436,7 @@ __STATIC_INLINE uint32_t LL_GPIO_GetPinMode(GPIO_TypeDef *GPIOx, uint32_t Pin)
   */
 __STATIC_INLINE void LL_GPIO_SetPinSpeed(GPIO_TypeDef *GPIOx, uint32_t Pin, uint32_t  Speed)
 {
-  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin >> 24)));
+  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin>>24)));
   MODIFY_REG(*pReg, (GPIO_CRL_MODE0 << (POSITION_VAL(Pin) * 4U)),
              (Speed << (POSITION_VAL(Pin) * 4U)));
 }
@@ -456,8 +474,9 @@ __STATIC_INLINE void LL_GPIO_SetPinSpeed(GPIO_TypeDef *GPIOx, uint32_t Pin, uint
   */
 __STATIC_INLINE uint32_t LL_GPIO_GetPinSpeed(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin >> 24)));
-  return (READ_BIT(*pReg, (GPIO_CRL_MODE0 << (POSITION_VAL(Pin) * 4U))) >> (POSITION_VAL(Pin) * 4U));
+  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin>>24)));
+  return (uint32_t)(READ_BIT(*pReg,
+                             (GPIO_CRL_MODE0 << (POSITION_VAL(Pin) * 4U))) >> (POSITION_VAL(Pin) * 4U));
 }
 
 /**
@@ -492,7 +511,7 @@ __STATIC_INLINE uint32_t LL_GPIO_GetPinSpeed(GPIO_TypeDef *GPIOx, uint32_t Pin)
   */
 __STATIC_INLINE void LL_GPIO_SetPinOutputType(GPIO_TypeDef *GPIOx, uint32_t Pin, uint32_t OutputType)
 {
-  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin >> 24)));
+  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin>>24)));
   MODIFY_REG(*pReg, (GPIO_CRL_CNF0_0 << (POSITION_VAL(Pin) * 4U)),
              (OutputType << (POSITION_VAL(Pin) * 4U)));
 }
@@ -529,8 +548,9 @@ __STATIC_INLINE void LL_GPIO_SetPinOutputType(GPIO_TypeDef *GPIOx, uint32_t Pin,
   */
 __STATIC_INLINE uint32_t LL_GPIO_GetPinOutputType(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin >> 24)));
-  return (READ_BIT(*pReg, (GPIO_CRL_CNF0_0 << (POSITION_VAL(Pin) * 4U))) >> (POSITION_VAL(Pin) * 4U));
+  register uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&GPIOx->CRL) + (Pin>>24)));
+  return (uint32_t)(READ_BIT(*pReg,
+                            (GPIO_CRL_CNF0_0 << (POSITION_VAL(Pin) * 4U))) >> (POSITION_VAL(Pin) * 4U));
 
 }
 
@@ -563,7 +583,7 @@ __STATIC_INLINE uint32_t LL_GPIO_GetPinOutputType(GPIO_TypeDef *GPIOx, uint32_t 
   */
 __STATIC_INLINE void LL_GPIO_SetPinPull(GPIO_TypeDef *GPIOx, uint32_t Pin, uint32_t Pull)
 {
-  MODIFY_REG(GPIOx->ODR, (Pin >> GPIO_PIN_MASK_POS), Pull << (POSITION_VAL(Pin >> GPIO_PIN_MASK_POS)));
+  MODIFY_REG(GPIOx->ODR, (Pin>>8) , Pull << (POSITION_VAL(Pin>>8)));
 }
 
 /**
@@ -594,7 +614,8 @@ __STATIC_INLINE void LL_GPIO_SetPinPull(GPIO_TypeDef *GPIOx, uint32_t Pin, uint3
   */
 __STATIC_INLINE uint32_t LL_GPIO_GetPinPull(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  return (READ_BIT(GPIOx->ODR, (GPIO_ODR_ODR0 << (POSITION_VAL(Pin >> GPIO_PIN_MASK_POS)))) >> (POSITION_VAL(Pin >> GPIO_PIN_MASK_POS)));
+  return (uint32_t)(READ_BIT(GPIOx->ODR,
+                             (GPIO_ODR_ODR0 << (POSITION_VAL(Pin>>8)))) >> (POSITION_VAL(Pin>>8)));
 }
 
 /**
@@ -629,9 +650,9 @@ __STATIC_INLINE uint32_t LL_GPIO_GetPinPull(GPIO_TypeDef *GPIOx, uint32_t Pin)
 __STATIC_INLINE void LL_GPIO_LockPin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
   __IO uint32_t temp;
-  WRITE_REG(GPIOx->LCKR, GPIO_LCKR_LCKK | ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU));
-  WRITE_REG(GPIOx->LCKR, ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU));
-  WRITE_REG(GPIOx->LCKR, GPIO_LCKR_LCKK | ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU));
+  WRITE_REG(GPIOx->LCKR, GPIO_LCKR_LCKK | ((PinMask >> 8) & 0x0000FFFFU));
+  WRITE_REG(GPIOx->LCKR, ((PinMask >>8 ) & 0x0000FFFFU));
+  WRITE_REG(GPIOx->LCKR, GPIO_LCKR_LCKK | ((PinMask>>8) & 0x0000FFFFU));
   temp = READ_REG(GPIOx->LCKR);
   (void) temp;
 }
@@ -662,7 +683,7 @@ __STATIC_INLINE void LL_GPIO_LockPin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsPinLocked(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(GPIOx->LCKR, ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU)) == ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU));
+  return (READ_BIT(GPIOx->LCKR, ((PinMask >> 8 ) & 0x0000FFFFU)) == ((PinMask >>8 ) & 0x0000FFFFU));
 }
 
 /**
@@ -692,7 +713,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsAnyPinLocked(GPIO_TypeDef *GPIOx)
   */
 __STATIC_INLINE uint32_t LL_GPIO_ReadInputPort(GPIO_TypeDef *GPIOx)
 {
-  return (READ_REG(GPIOx->IDR));
+  return (uint32_t)(READ_REG(GPIOx->IDR));
 }
 
 /**
@@ -721,7 +742,7 @@ __STATIC_INLINE uint32_t LL_GPIO_ReadInputPort(GPIO_TypeDef *GPIOx)
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsInputPinSet(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(GPIOx->IDR, (PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU) == ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU));
+  return (READ_BIT(GPIOx->IDR, (PinMask >> 8 ) & 0x0000FFFFU) == ((PinMask >> 8 ) & 0x0000FFFFU));
 }
 
 /**
@@ -773,7 +794,7 @@ __STATIC_INLINE uint32_t LL_GPIO_ReadOutputPort(GPIO_TypeDef *GPIOx)
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsOutputPinSet(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(GPIOx->ODR, (PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU) == ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU));
+  return (READ_BIT(GPIOx->ODR, (PinMask >> 8 ) & 0x0000FFFFU) == ((PinMask >> 8 ) & 0x0000FFFFU));
 }
 
 /**
@@ -802,7 +823,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsOutputPinSet(GPIO_TypeDef *GPIOx, uint32_t Pi
   */
 __STATIC_INLINE void LL_GPIO_SetOutputPin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  WRITE_REG(GPIOx->BSRR, (PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU);
+  WRITE_REG(GPIOx->BSRR, (PinMask >> 8) & 0x0000FFFFU);
 }
 
 /**
@@ -831,7 +852,7 @@ __STATIC_INLINE void LL_GPIO_SetOutputPin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
   */
 __STATIC_INLINE void LL_GPIO_ResetOutputPin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  WRITE_REG(GPIOx->BRR, (PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU);
+  WRITE_REG(GPIOx->BRR, (PinMask >> 8 ) & 0x0000FFFFU);
 }
 
 /**
@@ -860,9 +881,7 @@ __STATIC_INLINE void LL_GPIO_ResetOutputPin(GPIO_TypeDef *GPIOx, uint32_t PinMas
   */
 __STATIC_INLINE void LL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  uint32_t odr = READ_REG(GPIOx->ODR);
-  uint32_t pinmask = ((PinMask >> GPIO_PIN_MASK_POS) & 0x0000FFFFU);
-  WRITE_REG(GPIOx->BSRR, ((odr & pinmask) << 16u) | (~odr & pinmask));
+  WRITE_REG(GPIOx->ODR, READ_REG(GPIOx->ODR) ^ ((PinMask >> 8 ) & 0x0000FFFFU));
 }
 
 /**
@@ -882,7 +901,7 @@ __STATIC_INLINE void LL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_SPI1(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_SPI1_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_SPI1_REMAP);
 }
 
 /**
@@ -893,11 +912,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_SPI1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_SPI1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_SPI1_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_SPI1_REMAP);
 }
 
 /**
-  * @brief  Check if SPI1 has been remapped or not
+  * @brief  Check if SPI1 has been remaped or not
   * @rmtoll MAPR         SPI1_REMAP         LL_GPIO_AF_IsEnabledRemap_SPI1
   * @retval State of bit (1 or 0).
   */
@@ -914,7 +933,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_SPI1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_I2C1(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_I2C1_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_I2C1_REMAP);
 }
 
 /**
@@ -925,11 +944,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_I2C1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_I2C1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_I2C1_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_I2C1_REMAP);
 }
 
 /**
-  * @brief  Check if I2C1 has been remapped or not
+  * @brief  Check if I2C1 has been remaped or not
   * @rmtoll MAPR         I2C1_REMAP         LL_GPIO_AF_IsEnabledRemap_I2C1
   * @retval State of bit (1 or 0).
   */
@@ -946,7 +965,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_I2C1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_USART1(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_USART1_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_USART1_REMAP);
 }
 
 /**
@@ -957,11 +976,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_USART1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_USART1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_USART1_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_USART1_REMAP);
 }
 
 /**
-  * @brief  Check if USART1 has been remapped or not
+  * @brief  Check if USART1 has been remaped or not
   * @rmtoll MAPR         USART1_REMAP         LL_GPIO_AF_IsEnabledRemap_USART1
   * @retval State of bit (1 or 0).
   */
@@ -978,7 +997,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_USART1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_USART2(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_USART2_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_USART2_REMAP);
 }
 
 /**
@@ -989,11 +1008,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_USART2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_USART2(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_USART2_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_USART2_REMAP);
 }
 
 /**
-  * @brief  Check if USART2 has been remapped or not
+  * @brief  Check if USART2 has been remaped or not
   * @rmtoll MAPR         USART2_REMAP         LL_GPIO_AF_IsEnabledRemap_USART2
   * @retval State of bit (1 or 0).
   */
@@ -1011,7 +1030,8 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_USART2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_USART3(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_USART3_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_USART3_REMAP_FULLREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_USART3_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_USART3_REMAP_FULLREMAP); 
 }
 
 /**
@@ -1022,7 +1042,8 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_USART3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial_USART3(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_USART3_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_USART3_REMAP_PARTIALREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_USART3_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_USART3_REMAP_PARTIALREMAP); 
 }
 
 /**
@@ -1033,7 +1054,8 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial_USART3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_USART3(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_USART3_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_USART3_REMAP_NOREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_USART3_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_USART3_REMAP_NOREMAP); 
 }
 #endif
 
@@ -1045,7 +1067,8 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_USART3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM1_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM1_REMAP_FULLREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM1_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM1_REMAP_FULLREMAP); 
 }
 
 /**
@@ -1056,7 +1079,8 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial_TIM1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM1_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM1_REMAP_PARTIALREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM1_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM1_REMAP_PARTIALREMAP); 
 }
 
 /**
@@ -1067,7 +1091,8 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial_TIM1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM1_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM1_REMAP_NOREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM1_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM1_REMAP_NOREMAP); 
 }
 
 /**
@@ -1078,7 +1103,8 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM2(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM2_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM2_REMAP_FULLREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP_FULLREMAP); 
 }
 
 /**
@@ -1089,7 +1115,8 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial2_TIM2(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM2_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM2_REMAP_PARTIALREMAP2 | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP_PARTIALREMAP2); 
 }
 
 /**
@@ -1100,7 +1127,8 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial2_TIM2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial1_TIM2(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM2_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM2_REMAP_PARTIALREMAP1 | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP_PARTIALREMAP1); 
 }
 
 /**
@@ -1111,7 +1139,8 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial1_TIM2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM2(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM2_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM2_REMAP_NOREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM2_REMAP_NOREMAP); 
 }
 
 /**
@@ -1123,7 +1152,8 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM3(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM3_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM3_REMAP_FULLREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM3_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM3_REMAP_FULLREMAP); 
 }
 
 /**
@@ -1135,7 +1165,8 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial_TIM3(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM3_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM3_REMAP_PARTIALREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM3_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM3_REMAP_PARTIALREMAP); 
 }
 
 /**
@@ -1147,7 +1178,8 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial_TIM3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM3(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM3_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_TIM3_REMAP_NOREMAP | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM3_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM3_REMAP_NOREMAP); 
 }
 
 #if defined(AFIO_MAPR_TIM4_REMAP)
@@ -1160,7 +1192,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM4(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM4_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM4_REMAP);
 }
 /**
   * @brief Disable the remapping of TIM4 alternate function channels 1 to 4.
@@ -1171,11 +1203,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM4(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM4(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM4_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM4_REMAP);
 }
 
 /**
-  * @brief  Check if TIM4 has been remapped or not
+  * @brief  Check if TIM4 has been remaped or not
   * @rmtoll MAPR         TIM4_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM4
   * @retval State of bit (1 or 0).
   */
@@ -1195,7 +1227,8 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_TIM4(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial1_CAN1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_CAN_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_CAN_REMAP_REMAP1 | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_CAN_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_CAN_REMAP_REMAP1); 
 }
 
 /**
@@ -1206,7 +1239,8 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial1_CAN1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial2_CAN1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_CAN_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_CAN_REMAP_REMAP2 | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_CAN_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_CAN_REMAP_REMAP2); 
 }
 
 /**
@@ -1217,7 +1251,8 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial2_CAN1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_RemapPartial3_CAN1(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_CAN_REMAP | AFIO_MAPR_SWJ_CFG), (AFIO_MAPR_CAN_REMAP_REMAP3 | AFIO_MAPR_SWJ_CFG));
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_CAN_REMAP);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_CAN_REMAP_REMAP3); 
 }
 #endif
 
@@ -1232,7 +1267,7 @@ __STATIC_INLINE void LL_GPIO_AF_RemapPartial3_CAN1(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_PD01(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_PD01_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_PD01_REMAP);
 }
 
 /**
@@ -1246,11 +1281,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_PD01(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_PD01(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_PD01_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_PD01_REMAP);
 }
 
 /**
-  * @brief  Check if PD01 has been remapped or not
+  * @brief  Check if PD01 has been remaped or not
   * @rmtoll MAPR         PD01_REMAP         LL_GPIO_AF_IsEnabledRemap_PD01
   * @retval State of bit (1 or 0).
   */
@@ -1269,7 +1304,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_PD01(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM5CH4(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM5CH4_IREMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM5CH4_IREMAP);
 }
 
 /**
@@ -1281,11 +1316,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_TIM5CH4(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM5CH4(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM5CH4_IREMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM5CH4_IREMAP);
 }
 
 /**
-  * @brief  Check if TIM5CH4 has been remapped or not
+  * @brief  Check if TIM5CH4 has been remaped or not
   * @rmtoll MAPR         TIM5CH4_IREMAP         LL_GPIO_AF_IsEnabledRemap_TIM5CH4
   * @retval State of bit (1 or 0).
   */
@@ -1305,7 +1340,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_TIM5CH4(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ETH(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_ETH_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_ETH_REMAP);
 }
 
 /**
@@ -1317,11 +1352,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ETH(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_ETH(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_ETH_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_ETH_REMAP);
 }
 
 /**
-  * @brief  Check if ETH has been remapped or not
+  * @brief  Check if ETH has been remaped or not
   * @rmtoll MAPR         ETH_REMAP         LL_GPIO_AF_IsEnabledRemap_ETH
   * @retval State of bit (1 or 0).
   */
@@ -1342,7 +1377,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_ETH(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_CAN2(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_CAN2_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_CAN2_REMAP);
 }
 /**
   * @brief Disable the remapping of CAN2 alternate function CAN2_RX and CAN2_TX.
@@ -1353,11 +1388,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_CAN2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_CAN2(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_CAN2_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_CAN2_REMAP);
 }
 
 /**
-  * @brief  Check if CAN2 has been remapped or not
+  * @brief  Check if CAN2 has been remaped or not
   * @rmtoll MAPR         CAN2_REMAP         LL_GPIO_AF_IsEnabledRemap_CAN2
   * @retval State of bit (1 or 0).
   */
@@ -1377,7 +1412,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_CAN2(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_Select_ETH_RMII(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_MII_RMII_SEL | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_MII_RMII_SEL);
 }
 
 /**
@@ -1389,7 +1424,7 @@ __STATIC_INLINE void LL_GPIO_AF_Select_ETH_RMII(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_Select_ETH_MII(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_MII_RMII_SEL | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_MII_RMII_SEL);
 }
 #endif
 
@@ -1402,7 +1437,7 @@ __STATIC_INLINE void LL_GPIO_AF_Select_ETH_MII(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC1_ETRGINJ(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC1_ETRGINJ_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC1_ETRGINJ_REMAP);
 }
 
 /**
@@ -1413,11 +1448,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC1_ETRGINJ(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_ADC1_ETRGINJ(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_ADC1_ETRGINJ_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_ADC1_ETRGINJ_REMAP);
 }
 
 /**
-  * @brief  Check if ADC1_ETRGINJ has been remapped or not
+  * @brief  Check if ADC1_ETRGINJ has been remaped or not
   * @rmtoll MAPR         ADC1_ETRGINJ_REMAP         LL_GPIO_AF_IsEnabledRemap_ADC1_ETRGINJ
   * @retval State of bit (1 or 0).
   */
@@ -1436,7 +1471,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_ADC1_ETRGINJ(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC1_ETRGREG(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC1_ETRGREG_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC1_ETRGREG_REMAP);
 }
 
 /**
@@ -1447,11 +1482,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC1_ETRGREG(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_ADC1_ETRGREG(void)
 {
-   MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_ADC1_ETRGREG_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_ADC1_ETRGREG_REMAP);
 }
 
 /**
-  * @brief  Check if ADC1_ETRGREG has been remapped or not
+  * @brief  Check if ADC1_ETRGREG has been remaped or not
   * @rmtoll MAPR         ADC1_ETRGREG_REMAP         LL_GPIO_AF_IsEnabledRemap_ADC1_ETRGREG
   * @retval State of bit (1 or 0).
   */
@@ -1471,7 +1506,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_ADC1_ETRGREG(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC2_ETRGINJ(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC2_ETRGINJ_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC2_ETRGINJ_REMAP);
 }
 
 /**
@@ -1482,11 +1517,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC2_ETRGINJ(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_ADC2_ETRGINJ(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_ADC2_ETRGINJ_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_ADC2_ETRGINJ_REMAP);
 }
 
 /**
-  * @brief  Check if ADC2_ETRGINJ has been remapped or not
+  * @brief  Check if ADC2_ETRGINJ has been remaped or not
   * @rmtoll MAPR         ADC2_ETRGINJ_REMAP         LL_GPIO_AF_IsEnabledRemap_ADC2_ETRGINJ
   * @retval State of bit (1 or 0).
   */
@@ -1506,7 +1541,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_ADC2_ETRGINJ(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC2_ETRGREG(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC2_ETRGREG_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_ADC2_ETRGREG_REMAP);
 }
 
 /**
@@ -1517,11 +1552,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ADC2_ETRGREG(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_ADC2_ETRGREG(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_ADC2_ETRGREG_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_ADC2_ETRGREG_REMAP);
 }
 
 /**
-  * @brief  Check if ADC2_ETRGREG has been remapped or not
+  * @brief  Check if ADC2_ETRGREG has been remaped or not
   * @rmtoll MAPR         ADC2_ETRGREG_REMAP         LL_GPIO_AF_IsEnabledRemap_ADC2_ETRGREG
   * @retval State of bit (1 or 0).
   */
@@ -1539,7 +1574,8 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_ADC2_ETRGREG(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_SWJ(void)
 {
-  MODIFY_REG(AFIO->MAPR, AFIO_MAPR_SWJ_CFG, AFIO_MAPR_SWJ_CFG_RESET);
+  CLEAR_BIT(AFIO->MAPR,AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_SWJ_CFG_RESET);  
 }
 
 /**
@@ -1550,7 +1586,8 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_SWJ(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_Remap_SWJ_NONJTRST(void)
 {
-  MODIFY_REG(AFIO->MAPR, AFIO_MAPR_SWJ_CFG, AFIO_MAPR_SWJ_CFG_NOJNTRST);
+  CLEAR_BIT(AFIO->MAPR,AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_SWJ_CFG_NOJNTRST);
 }
 
 /**
@@ -1561,7 +1598,8 @@ __STATIC_INLINE void LL_GPIO_AF_Remap_SWJ_NONJTRST(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_Remap_SWJ_NOJTAG(void)
 {
-  MODIFY_REG(AFIO->MAPR, AFIO_MAPR_SWJ_CFG, AFIO_MAPR_SWJ_CFG_JTAGDISABLE);
+  CLEAR_BIT(AFIO->MAPR,AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_SWJ_CFG_JTAGDISABLE);
 }
 
 /**
@@ -1572,7 +1610,8 @@ __STATIC_INLINE void LL_GPIO_AF_Remap_SWJ_NOJTAG(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_SWJ(void)
 {
-  MODIFY_REG(AFIO->MAPR, AFIO_MAPR_SWJ_CFG, AFIO_MAPR_SWJ_CFG_DISABLE);
+  CLEAR_BIT(AFIO->MAPR,AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_SWJ_CFG_DISABLE);  
 }
 
 #if defined(AFIO_MAPR_SPI3_REMAP)
@@ -1586,7 +1625,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_SWJ(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_SPI3(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_SPI3_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_SPI3_REMAP);
 }
 
 /**
@@ -1598,11 +1637,11 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_SPI3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_SPI3(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_SPI3_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_SPI3_REMAP);
 }
 
 /**
-  * @brief  Check if SPI3 has been remapped or not
+  * @brief  Check if SPI3 has been remaped or not
   * @rmtoll MAPR         SPI3_REMAP         LL_GPIO_AF_IsEnabledRemap_SPI3_REMAP
   * @retval State of bit (1 or 0).
   */
@@ -1623,7 +1662,7 @@ __STATIC_INLINE uint32_t LL_GPIO_AF_IsEnabledRemap_SPI3(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_Remap_TIM2ITR1_TO_USB(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM2ITR1_IREMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_TIM2ITR1_IREMAP);
 }
 
 /**
@@ -1635,7 +1674,7 @@ __STATIC_INLINE void LL_GPIO_AF_Remap_TIM2ITR1_TO_USB(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_Remap_TIM2ITR1_TO_ETH(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_TIM2ITR1_IREMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_TIM2ITR1_IREMAP);
 }
 #endif
 
@@ -1650,7 +1689,7 @@ __STATIC_INLINE void LL_GPIO_AF_Remap_TIM2ITR1_TO_ETH(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ETH_PTP_PPS(void)
 {
-  SET_BIT(AFIO->MAPR, AFIO_MAPR_PTP_PPS_REMAP | AFIO_MAPR_SWJ_CFG);
+  SET_BIT(AFIO->MAPR, AFIO_MAPR_PTP_PPS_REMAP);
 }
 
 /**
@@ -1662,7 +1701,7 @@ __STATIC_INLINE void LL_GPIO_AF_EnableRemap_ETH_PTP_PPS(void)
   */
 __STATIC_INLINE void LL_GPIO_AF_DisableRemap_ETH_PTP_PPS(void)
 {
-  MODIFY_REG(AFIO->MAPR, (AFIO_MAPR_PTP_PPS_REMAP | AFIO_MAPR_SWJ_CFG), AFIO_MAPR_SWJ_CFG);
+  CLEAR_BIT(AFIO->MAPR, AFIO_MAPR_PTP_PPS_REMAP);
 }
 #endif
 
@@ -1691,7 +1730,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM9(void)
 }
 
 /**
-  * @brief  Check if TIM9_CH1 and TIM9_CH2 have been remapped or not
+  * @brief  Check if TIM9_CH1 and TIM9_CH2 have been remaped or not
   * @rmtoll MAPR2         TIM9_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM9
   * @retval State of bit (1 or 0).
   */
@@ -1726,7 +1765,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM10(void)
 }
 
 /**
-  * @brief  Check if TIM10_CH1 has been remapped or not
+  * @brief  Check if TIM10_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM10_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM10
   * @retval State of bit (1 or 0).
   */
@@ -1760,7 +1799,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM11(void)
 }
 
 /**
-  * @brief  Check if TIM11_CH1 has been remapped or not
+  * @brief  Check if TIM11_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM11_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM11
   * @retval State of bit (1 or 0).
   */
@@ -1795,7 +1834,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM13(void)
 }
 
 /**
-  * @brief  Check if TIM13_CH1 has been remapped or not
+  * @brief  Check if TIM13_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM13_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM13
   * @retval State of bit (1 or 0).
   */
@@ -1830,7 +1869,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM14(void)
 }
 
 /**
-  * @brief  Check if TIM14_CH1 has been remapped or not
+  * @brief  Check if TIM14_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM14_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM14
   * @retval State of bit (1 or 0).
   */
@@ -1889,7 +1928,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM15(void)
 }
 
 /**
-  * @brief  Check if TIM15_CH1 has been remapped or not
+  * @brief  Check if TIM15_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM15_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM15
   * @retval State of bit (1 or 0).
   */
@@ -1924,7 +1963,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM16(void)
 }
 
 /**
-  * @brief  Check if TIM16_CH1 has been remapped or not
+  * @brief  Check if TIM16_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM16_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM16
   * @retval State of bit (1 or 0).
   */
@@ -1959,7 +1998,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM17(void)
 }
 
 /**
-  * @brief  Check if TIM17_CH1 has been remapped or not
+  * @brief  Check if TIM17_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM17_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM17
   * @retval State of bit (1 or 0).
   */
@@ -1994,7 +2033,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_CEC(void)
 }
 
 /**
-  * @brief  Check if CEC has been remapped or not
+  * @brief  Check if CEC has been remaped or not
   * @rmtoll MAPR2         CEC_REMAP         LL_GPIO_AF_IsEnabledRemap_CEC
   * @retval State of bit (1 or 0).
   */
@@ -2029,7 +2068,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM1DMA(void)
 }
 
 /**
-  * @brief  Check if TIM1DMA has been remapped or not
+  * @brief  Check if TIM1DMA has been remaped or not
   * @rmtoll MAPR2         TIM1_DMA_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM1DMA
   * @retval State of bit (1 or 0).
   */
@@ -2064,7 +2103,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM67DACDMA(void)
 }
 
 /**
-  * @brief  Check if TIM67DACDMA has been remapped or not
+  * @brief  Check if TIM67DACDMA has been remaped or not
   * @rmtoll MAPR2         TIM76_DAC_DMA_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM67DACDMA
   * @retval State of bit (1 or 0).
   */
@@ -2101,7 +2140,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_TIM12(void)
 }
 
 /**
-  * @brief  Check if TIM12_CH1 has been remapped or not
+  * @brief  Check if TIM12_CH1 has been remaped or not
   * @rmtoll MAPR2         TIM12_REMAP         LL_GPIO_AF_IsEnabledRemap_TIM12
   * @retval State of bit (1 or 0).
   */
@@ -2146,7 +2185,7 @@ __STATIC_INLINE void LL_GPIO_AF_DisableRemap_MISC(void)
 }
 
 /**
-  * @brief  Check if MISC has been remapped or not
+  * @brief  Check if MISC has been remaped or not
   * @rmtoll MAPR2         MISC_REMAP         LL_GPIO_AF_IsEnabledRemap_MISC
   * @retval State of bit (1 or 0).
   */
@@ -2337,5 +2376,6 @@ void        LL_GPIO_StructInit(LL_GPIO_InitTypeDef *GPIO_InitStruct);
 }
 #endif
 
-#endif /* STM32F1xx_LL_GPIO_H */
+#endif /* __STM32F1xx_LL_GPIO_H */
 
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -264,13 +264,5 @@ void USART3_IRQHandler(void) {
 }
 
 /* USER CODE BEGIN 1 */
-void SDIO_IRQHandler(void) {
-  HAL_SD_IRQHandler(&uSdHandle);
-}
-
-void DMA2_Channel4_5_IRQHandler(void) {
-  HAL_DMA_IRQHandler(uSdHandle.hdmarx);
-  HAL_DMA_IRQHandler(uSdHandle.hdmatx);
-}
 
 /* USER CODE END 1 */

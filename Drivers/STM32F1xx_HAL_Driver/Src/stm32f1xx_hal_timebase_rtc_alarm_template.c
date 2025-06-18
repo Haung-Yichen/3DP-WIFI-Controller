@@ -1,27 +1,17 @@
 /**
   ******************************************************************************
-  * @file    stm32f1xx_hal_timebase_rtc_alarm_template.c
+  * @file    stm32f1xx_hal_timebase_rtc_alarm_template.c 
   * @author  MCD Application Team
+  * @version V1.1.1
+  * @date    12-May-2017
   * @brief   HAL time base based on the hardware RTC_ALARM.
   *
   *          This file override the native HAL time base functions (defined as weak)
   *          to use the RTC ALARM for time base generation:
   *           + Intializes the RTC peripheral to increment the seconds registers each 1ms
-  *           + The alarm is configured to assert an interrupt when the RTC reaches 1ms
+  *           + The alarm is configured to assert an interrupt when the RTC reaches 1ms 
   *           + HAL_IncTick is called at each Alarm event and the time is reset to 00:00:00
-  *           + HSE (default), LSE or LSI can be selected as RTC clock source
-  *
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
+  *           + HSE (default), LSE or LSI can be selected as RTC clock source  
  @verbatim
   ==============================================================================
                         ##### How to use this driver #####
@@ -30,17 +20,44 @@
     This file must be copied to the application folder and modified as follows:
     (#) Rename it to 'stm32f1xx_hal_timebase_rtc_alarm.c'
     (#) Add this file and the RTC HAL drivers to your project and uncomment
-       HAL_RTC_MODULE_ENABLED define in stm32f1xx_hal_conf.h
+       HAL_RTC_MODULE_ENABLED define in stm32f1xx_hal_conf.h 
 
     [..]
     (@) HAL RTC alarm and HAL RTC wakeup drivers can’t be used with low power modes:
         The wake up capability of the RTC may be intrusive in case of prior low power mode
         configuration requiring different wake up sources.
-        Application/Example behavior is no more guaranteed
+        Application/Example behavior is no more guaranteed 
     (@) The stm32f1xx_hal_timebase_tim use is recommended for the Applications/Examples
           requiring low power modes
 
   @endverbatim
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *   1. Redistributions of source code must retain the above copyright notice,
+  *      this list of conditions and the following disclaimer.
+  *   2. Redistributions in binary form must reproduce the above copyright notice,
+  *      this list of conditions and the following disclaimer in the documentation
+  *      and/or other materials provided with the distribution.
+  *   3. Neither the name of STMicroelectronics nor the names of its contributors
+  *      may be used to endorse or promote products derived from this software
+  *      without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *
   ******************************************************************************
   */
 
@@ -76,21 +93,20 @@ void RTC_Alarm_IRQHandler(void);
 /* Private functions ---------------------------------------------------------*/
 
 /**
-  * @brief  This function configures the RTC_ALARMA as a time base source.
-  *         The time source is configured  to have 1ms time base with a dedicated
-  *         Tick interrupt priority.
+  * @brief  This function configures the RTC_ALARMA as a time base source. 
+  *         The time source is configured  to have 1ms time base with a dedicated 
+  *         Tick interrupt priority. 
   * @note   This function is called  automatically at the beginning of program after
   *         reset by HAL_Init() or at any time when clock is configured, by HAL_RCC_ClockConfig().
-  * @param  TickPriority Tick interrupt priority.
+  * @param  TickPriority: Tick interrupt priority.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority)
 {
   __IO uint32_t counter = 0U;
 
   RCC_OscInitTypeDef        RCC_OscInitStruct;
   RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
-  HAL_StatusTypeDef         status;
 
 #ifdef RTC_CLOCK_SOURCE_LSE
   /* Configue LSE as RTC clock soucre */
@@ -113,94 +129,76 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 #else
 #error Please select the RTC Clock source
 #endif /* RTC_CLOCK_SOURCE_LSE */
-  status = HAL_RCC_OscConfig(&RCC_OscInitStruct);
-  if (status == HAL_OK)
+
+  if(HAL_RCC_OscConfig(&RCC_OscInitStruct) == HAL_OK)
   {
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-    status = HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
-    if (status == HAL_OK)
+    if(HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) == HAL_OK)
     {
       /* Enable RTC Clock */
       __HAL_RCC_RTC_ENABLE();
 
-      /* Configure RTC time base to 10Khz */
       hRTC_Handle.Instance = RTC;
-      hRTC_Handle.Init.AsynchPrediv = (HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_RTC) / 10000) - 1;
+      /* Configure RTC time base to 10Khz */
+      hRTC_Handle.Init.AsynchPrediv =  (HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_RTC) / 10000) - 1;
       hRTC_Handle.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
-      status = HAL_RTC_Init(&hRTC_Handle);
-    }
-  }
-  if (status == HAL_OK)
-  {
-    /* Disable the write protection for RTC registers */
-    __HAL_RTC_WRITEPROTECTION_DISABLE(&hRTC_Handle);
+      HAL_RTC_Init(&hRTC_Handle);
 
-    /* Clear flag alarm A */
-    __HAL_RTC_ALARM_CLEAR_FLAG(&hRTC_Handle, RTC_FLAG_ALRAF);
+      /* Disable the write protection for RTC registers */
+      __HAL_RTC_WRITEPROTECTION_DISABLE(&hRTC_Handle);
 
-    counter = 0U;
-    /* Wait till RTC ALRAF flag is set and if Time out is reached exit */
-    while (__HAL_RTC_ALARM_GET_FLAG(&hRTC_Handle, RTC_FLAG_ALRAF) != RESET)
-    {
-      if (counter++ == SystemCoreClock / 48U) /* Timeout = ~ 1s */
+      /* Clear flag alarm A */
+      __HAL_RTC_ALARM_CLEAR_FLAG(&hRTC_Handle, RTC_FLAG_ALRAF);
+
+      counter = 0U;
+      /* Wait till RTC ALRAF flag is set and if Time out is reached exit */
+      while(__HAL_RTC_ALARM_GET_FLAG(&hRTC_Handle, RTC_FLAG_ALRAF) != RESET)
       {
-        status = HAL_ERROR;
+        if(counter++ == SystemCoreClock /48U) /* Timeout = ~ 1s */
+        {
+          return HAL_ERROR;
+        }
       }
-    }
-  }
-  if (status == HAL_OK)
-  {
-    /* Set RTC COUNTER MSB word */
-    hRTC_Handle.Instance->ALRH = 0x00U;
-    /* Set RTC COUNTER LSB word */
-    hRTC_Handle.Instance->ALRL = 0x09U;
 
-    /* RTC Alarm Interrupt Configuration: EXTI configuration */
-    __HAL_RTC_ALARM_EXTI_ENABLE_IT();
-    __HAL_RTC_ALARM_EXTI_ENABLE_RISING_EDGE();
+      /* Set RTC COUNTER MSB word */
+      hRTC_Handle.Instance->ALRH = 0x00U;
+      /* Set RTC COUNTER LSB word */
+      hRTC_Handle.Instance->ALRL = 0x09U;
 
-    /* Clear Second and overflow flags */
-    CLEAR_BIT(hRTC_Handle.Instance->CRL, (RTC_FLAG_SEC | RTC_FLAG_OW));
+      /* RTC Alarm Interrupt Configuration: EXTI configuration */
+      __HAL_RTC_ALARM_EXTI_ENABLE_IT();
+      __HAL_RTC_ALARM_EXTI_ENABLE_RISING_EDGE();
 
-    /* Set RTC COUNTER MSB word */
-    hRTC_Handle.Instance->CNTH = 0x00U;
-    /* Set RTC COUNTER LSB word */
-    hRTC_Handle.Instance->CNTL = 0x00U;
+      /* Clear Second and overflow flags */
+      CLEAR_BIT(hRTC_Handle.Instance->CRL, (RTC_FLAG_SEC | RTC_FLAG_OW));
 
-    /* Configure the Alarm interrupt */
-    __HAL_RTC_ALARM_ENABLE_IT(&hRTC_Handle, RTC_IT_ALRA);
+      /* Set RTC COUNTER MSB word */
+      hRTC_Handle.Instance->CNTH = 0x00U;
+      /* Set RTC COUNTER LSB word */
+      hRTC_Handle.Instance->CNTL = 0x00U;
 
-    /* Enable the write protection for RTC registers */
-    __HAL_RTC_WRITEPROTECTION_ENABLE(&hRTC_Handle);
+      /* Configure the Alarm interrupt */
+      __HAL_RTC_ALARM_ENABLE_IT(&hRTC_Handle, RTC_IT_ALRA);
 
-    /* Wait till RTC is in INIT state and if Time out is reached exit */
-    counter = 0U;
-    while ((hRTC_Handle.Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
-    {
-      if (counter++ == SystemCoreClock / 48U) /* Timeout = ~ 1s */
+      /* Enable the write protection for RTC registers */
+      __HAL_RTC_WRITEPROTECTION_ENABLE(&hRTC_Handle);
+
+      /* Wait till RTC is in INIT state and if Time out is reached exit */
+      counter = 0U;
+      while((hRTC_Handle.Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
       {
-        status = HAL_ERROR;
+        if(counter++ == SystemCoreClock /48U) /* Timeout = ~ 1s */
+        {
+          return HAL_ERROR;
+        }
       }
-    } 
-  }
-  if (status == HAL_OK)
-  {
-    /* Enable the RTC global Interrupt */
-    HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
 
-    /* Configure the SysTick IRQ priority */
-    if (TickPriority < (1UL << __NVIC_PRIO_BITS))
-    {
-      HAL_NVIC_SetPriority(RTC_Alarm_IRQn, TickPriority ,0U);
-      uwTickPrio = TickPriority;
-    }
-    else
-    {
-      status = HAL_ERROR;
+      HAL_NVIC_SetPriority(RTC_Alarm_IRQn, TickPriority, 0U);
+      HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
+      return HAL_OK;
     }
   }
-
-  return status;
+  return HAL_ERROR;
 }
 
 /**
@@ -243,9 +241,9 @@ void HAL_ResumeTick(void)
   __HAL_RTC_WRITEPROTECTION_ENABLE(&hRTC_Handle);
 
   /* Wait till RTC is in INIT state and if Time out is reached exit */
-  while ((hRTC_Handle.Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
+  while((hRTC_Handle.Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
   {
-    if (counter++ == SystemCoreClock / 48U) /* Timeout = ~ 1s */
+    if(counter++ == SystemCoreClock /48U) /* Timeout = ~ 1s */
     {
       break;
     }
@@ -257,7 +255,7 @@ void HAL_ResumeTick(void)
   * @note   This function is called  when RTC_ALARM interrupt took place, inside
   * RTC_ALARM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
-  * @param  hrtc RTC handle
+  * @param  hrtc : RTC handle
   * @retval None
   */
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
@@ -280,9 +278,9 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
   __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
 
   /* Wait till RTC is in INIT state and if Time out is reached exit */
-  while ((hrtc->Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
+  while((hrtc->Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
   {
-    if (counter++ == SystemCoreClock / 48U) /* Timeout = ~ 1s */
+    if(counter++ == SystemCoreClock /48U) /* Timeout = ~ 1s */
     {
       break;
     }
@@ -306,4 +304,4 @@ void RTC_Alarm_IRQHandler(void)
   * @}
   */
 
-
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

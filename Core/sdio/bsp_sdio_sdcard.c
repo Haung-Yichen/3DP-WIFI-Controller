@@ -18,7 +18,6 @@
 #include "bsp_sdio_sdcard.h"
 #include "usart.h"
 
-  
 SD_HandleTypeDef uSdHandle;
  
 uint8_t SD_DMAConfigRx(SD_HandleTypeDef *hsd);
@@ -346,7 +345,7 @@ uint8_t SD_DMAConfigRx(SD_HandleTypeDef *hsd)
     hdma_rx.Instance = SD_DMAx_Rx_INSTANCE;
 
     /* Associate the DMA handle */
-    __HAL_LINKDMA(&uSdHandle, hdmarx, hdma_rx);
+    __HAL_LINKDMA(hsd, hdmarx, hdma_rx);
 
     /* Stop any ongoing transfer and reset the state*/
     HAL_DMA_Abort(&hdma_rx);
@@ -394,7 +393,7 @@ uint8_t SD_DMAConfigTx(SD_HandleTypeDef *hsd)
     hdma_tx.Instance = SD_DMAx_Tx_INSTANCE;
     
     /* Associate the DMA handle */
-    __HAL_LINKDMA(&uSdHandle, hdmatx, hdma_tx);
+    __HAL_LINKDMA(hsd, hdmatx, hdma_tx);
 
     /* Stop any ongoing transfer and reset the state*/
     HAL_DMA_Abort(&hdma_tx);
@@ -472,6 +471,15 @@ __weak void BSP_SD_WriteCpltCallback(void)
 __weak void BSP_SD_ReadCpltCallback(void)
 {
 
+}
+
+void SDIO_IRQHandler(void) {
+  HAL_SD_IRQHandler(&uSdHandle);
+}
+
+void DMA2_Channel4_5_IRQHandler(void) {
+  HAL_DMA_IRQHandler(uSdHandle.hdmarx);
+  HAL_DMA_IRQHandler(uSdHandle.hdmatx);
 }
 
 
