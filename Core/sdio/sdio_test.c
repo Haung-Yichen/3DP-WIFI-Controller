@@ -15,6 +15,7 @@
   ******************************************************************************
   */
 #include "sdio_test.h"
+#include "bsp_led.h"
 #include "bsp_sdio_sdcard.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,7 +66,7 @@ void SD_Test(void)
     }
     else
     {
-       printf("SD ERASE : OK.\r\n");
+       printf("SD ERASE : OK.\r\n"); 
       /* Fill the buffer to write */
       Fill_Buffer(aTxBuffer, BUFFER_WORDS_SIZE, 0x22FF);
       SD_state = BSP_SD_WriteBlocks(aTxBuffer, BLOCK_START_ADDR, NUM_OF_BLOCKS,10);

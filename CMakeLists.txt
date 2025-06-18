@@ -36,14 +36,22 @@ enable_language(C ASM)
 
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
+        Core/led/bsp_led.c
+        Core/FatFs/drivers/sd_diskio.c
+        Core/FatFs/drivers/sd_diskio.h
+        Core/FatFs/option/syscall.c
+        Core/FatFs/option/ccsbcs.c
         Core/FatFs/diskio.c
         Core/FatFs/ff.c
         Core/FatFs/ff_gen_drv.c
-        Core/FatFs/option/syscall.c
-        Core/FatFs/drivers/sd_diskio.c
+        Core/FatFs/ffconf_template.h
         Core/sdio/bsp_sdio_sdcard.c
+        Core/sdio/bsp_sdio_sdcard.h
+        Core/sdio/sdio_test.h
         Core/sdio/sdio_test.c
-        Core/FatFs/option/ccsbcs.c)
+        Core/Inc/cmdHandler.h
+        Core/Src/cmdHandler.c
+)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

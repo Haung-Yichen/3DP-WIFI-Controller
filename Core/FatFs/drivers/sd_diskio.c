@@ -46,8 +46,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <string.h>
-
-#include "bsp_sdio_sdcard.h"
 #include "ff_gen_drv.h"
 
 #include "bsp_sdio_sdcard.h"

@@ -4,7 +4,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx.h"
-
+#include "stm32f1xx_hal_sd.h"
 
 #define BSP_SD_CardInfo HAL_SD_CardInfoTypeDef
 
@@ -12,7 +12,7 @@
 #define MSD_OK         ((uint8_t)0x00)
 #define MSD_ERROR      ((uint8_t)0x01)
 
-
+ 
 /** 
   * @brief  SD transfer state definition  
   */     

@@ -2,59 +2,70 @@
 #include <string.h>
 #include <stdio.h>
 
+/* 命令格式定義  */
 typedef struct {
-    char cmdName[MAX_CMD_LEN];
-    CommandCallback callback;
+	char cmdName[MAX_CMD_LEN];
+	CommandCallback callback;
 } Command_Typedef;
 
-static Command_Typedef commands[MAX_CMD_COUNT];
-static uint8_t cmdQty = 0;
+static Command_Typedef commands[MAX_CMD_COUNT]; //存放所有命令
+static uint8_t cmdQty = 0;						//目前命令數量
 
-bool register_command(const char* cmdName, CommandCallback callback)
-{
-    if (cmdQty >= MAX_CMD_COUNT || cmdName == NULL || callback == NULL)
-        return false;
+CmdHandlerStat register_command(const char *cmdName, CommandCallback callback) {
 
-    // 檢查是否重複
-    for (uint8_t i = 0; i < cmdQty; ++i) {
-        if (strcmp(commands[i].cmdName, cmdName) == 0) {
-            return false;  // 已存在相同命令
-        }
-    }
+	if (cmdQty >= MAX_CMD_COUNT) {
+		return QTY_OVER;
+	}else if (cmdName == NULL) {
+		return NAME_ERR;
+	}else if (callback == NULL) {
+		return CALBCK_ERR;
+	}
 
-    strncpy(commands[cmdQty].cmdName, cmdName, MAX_CMD_LEN - 1);
-    commands[cmdQty].cmdName[MAX_CMD_LEN - 1] = '\0';
-    commands[cmdQty].callback = callback;
-    ++cmdQty;
-    return true;
+	// 檢查是否重複
+	for (uint8_t i = 0; i < cmdQty; ++i) {
+		if (strcmp(commands[i].cmdName, cmdName) == 0) {  //重複
+			return REPEAT_ERR;
+		}
+	}
+
+	strncpy(commands[cmdQty].cmdName, cmdName, MAX_CMD_LEN - 1);
+	commands[cmdQty].cmdName[MAX_CMD_LEN - 1] = '\0';
+	commands[cmdQty].callback = callback;
+	++cmdQty;
+	return CMD_OK;
 }
 
-bool execute_command(const char* input)
-{
-    if (input == NULL) return false;
+CmdHandlerStat execute_command(const char *cmd, void *res) {
+	if (cmd == NULL) return CMD_ERR;
 
-    // 找出空白分隔：命令 + 參數
-    const char* spacePos = strchr(input, ' ');
-    char cmdName[MAX_CMD_LEN] = {0};
-    const char* args = "";
+	const char *spacePos = strchr(cmd, ' ');
+	char cmdName[MAX_CMD_LEN] = {0};
+	const char *args = "";
 
-    if (spacePos) {
-        size_t len = (size_t)(spacePos - input);
-        if (len >= MAX_CMD_LEN) len = MAX_CMD_LEN - 1;
-        strncpy(cmdName, input, len);
-        cmdName[len] = '\0';
-        args = spacePos + 1;
-    } else {
-        strncpy(cmdName, input, MAX_CMD_LEN - 1);
-        cmdName[MAX_CMD_LEN - 1] = '\0';
-    }
+	if (spacePos) {
+		size_t len = (size_t) (spacePos - cmd);
+		if (len >= MAX_CMD_LEN) len = MAX_CMD_LEN - 1;
+		strncpy(cmdName, cmd, len);
+		cmdName[len] = '\0';
+		args = spacePos + 1;
+	} else {
+		strncpy(cmdName, cmd, MAX_CMD_LEN - 1);
+		cmdName[MAX_CMD_LEN - 1] = '\0';
+	}
 
-    for (uint8_t i = 0; i < cmdQty; ++i) {
-        if (strcmp(commands[i].cmdName, cmdName) == 0) {
-            commands[i].callback(args);
-            return true;
-        }
-    }
-
-    return false;
+	for (uint8_t i = 0; i < cmdQty; ++i) {
+		if (strcmp(commands[i].cmdName, cmdName) == 0) {
+			commands[i].callback(args, res);
+			return CMD_OK;
+		}
+	}
+	return EXC_ERR;
 }
+
+#ifdef DEBUG
+void print_all_cmd(void) {
+	for (uint8_t i = 0; i < cmdQty; ++i) {
+		printf("%s\n", commands[i].cmdName);
+	}
+}
+#endif
