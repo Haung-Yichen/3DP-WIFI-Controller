@@ -20,22 +20,22 @@ extern "C" {
 /**
  * @brief 開始列印命令的處理函式
  */
-void PrinterController_StartToPrintCmdHandler(const char* args);
+void StartToPrintCmdHandler(const char* args);
 
 /**
  * @brief 暫停列印命令的處理函式
  */
-void PrinterController_PausePrintingCmdHandler(const char* args);
+void PausePrintingCmdHandler(const char* args);
 
 /**
  * @brief 停止列印命令的處理函式
  */
-void PrinterController_StopPrintingCmdHandler(const char* args);
+void StopPrintingCmdHandler(const char* args);
 
 /**
  * @brief 回到原點命令的處理函式
  */
-void PrinterController_GoHomeCmdHandler(const char* args);
+void GoHomeCmdHandler(const char* args);
 
 #ifdef __cplusplus
 }

@@ -8,7 +8,7 @@ typedef struct {
 	CommandCallback callback;
 } Command_Typedef;
 
-static Command_Typedef commands[MAX_CMD_COUNT]; //存放所有命令
+static Command_Typedef commands[MAX_CMD_COUNT] = {0}; //存放所有命令
 static uint8_t cmdQty = 0;						//目前命令數量
 
 CmdHandlerStat register_command(const char *cmdName, CommandCallback callback) {

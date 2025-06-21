@@ -9,7 +9,6 @@ void ledBlinkTask(void *argument)
     /* USER CODE BEGIN ledBlinkTask */
     while (1)
     {
-      printf("hi\r\n");
         LED_RED; // Turn on red LED
         osDelay(500); // Delay for 500 ms
         LED_RGBOFF; // Turn off all LEDs

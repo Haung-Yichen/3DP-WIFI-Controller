@@ -725,7 +725,7 @@ typedef struct
 #define SDIO_INIT_CLK_DIV ((uint8_t)0xC3)
 
 /* SDIO Data Transfer Frequency */
-#define SDIO_TRANSFER_CLK_DIV ((uint8_t)0x9)
+#define SDIO_TRANSFER_CLK_DIV ((uint8_t)0x7)
 
 /**
   * @}
