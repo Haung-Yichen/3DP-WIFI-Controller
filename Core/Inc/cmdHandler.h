@@ -8,15 +8,15 @@
 #define MAX_CMD_LEN   20	//單條命令字元數
 
 //建立或執行命令時錯誤種類枚舉
-typedef enum CmdHandlerErrStat_Typedef{
-	CMD_OK = 0,     //正常
-	QTY_OVER,		//超過命令數量限制
-	NAME_ERR,		//命令命名錯誤
-	CALBCK_ERR,		//回調函數無效
-	REPEAT_ERR,		//命令名稱重複
-	CMD_ERR,		//命領無效
-	EXC_ERR			//執行錯誤
-}CmdHandlerStat;
+typedef enum CmdHandlerErrStat_Typedef {
+	CMD_OK = 0, //正常
+	QTY_OVER, //超過命令數量限制
+	NAME_ERR, //命令命名錯誤
+	CALBCK_ERR, //回調函數無效
+	REPEAT_ERR, //命令名稱重複
+	CMD_ERR, //命領無效
+	EXC_ERR //執行錯誤
+} CmdHandlerStat;
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,8 +42,15 @@ CmdHandlerStat register_command(const char *cmdName, CommandCallback callback);
  */
 CmdHandlerStat execute_command(const char *cmd, void *res);
 
+/**
+ * @brief 判斷命令是否需要返回值
+ * @param cmd
+ * @return
+ */
+bool isReqCmd(const char cmd);
+
 #ifdef DEBUG
-void print_all_cmd(void);  //印出所有已註冊命令
+void print_all_cmd(void); //印出所有已註冊命令
 #endif
 
 #ifdef __cplusplus

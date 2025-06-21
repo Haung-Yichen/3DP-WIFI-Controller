@@ -56,6 +56,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         Core/sdio/Fatfs_SDIO_Test.h
         Core/FatFs/ff_print_err.h
         Core/FatFs/ff_print_err.c
+        Core/Inc/esp32.h
+        Core/Src/esp32.c
 )
 
 # Add STM32CubeMX generated sources

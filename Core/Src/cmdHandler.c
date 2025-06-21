@@ -9,21 +9,21 @@ typedef struct {
 } Command_Typedef;
 
 static Command_Typedef commands[MAX_CMD_COUNT] = {0}; //存放所有命令
-static uint8_t cmdQty = 0;						//目前命令數量
+static uint8_t cmdQty = 0; //目前命令數量
 
 CmdHandlerStat register_command(const char *cmdName, CommandCallback callback) {
-
 	if (cmdQty >= MAX_CMD_COUNT) {
 		return QTY_OVER;
-	}else if (cmdName == NULL) {
+	} else if (cmdName == NULL) {
 		return NAME_ERR;
-	}else if (callback == NULL) {
+	} else if (callback == NULL) {
 		return CALBCK_ERR;
 	}
 
 	// 檢查是否重複
 	for (uint8_t i = 0; i < cmdQty; ++i) {
-		if (strcmp(commands[i].cmdName, cmdName) == 0) {  //重複
+		if (strcmp(commands[i].cmdName, cmdName) == 0) {
+			//重複
 			return REPEAT_ERR;
 		}
 	}
@@ -60,6 +60,10 @@ CmdHandlerStat execute_command(const char *cmd, void *res) {
 		}
 	}
 	return EXC_ERR;
+}
+
+bool isReqCmd(const char cmd) {
+	return strstr(&cmd, (const char *) "CReq");
 }
 
 #ifdef DEBUG

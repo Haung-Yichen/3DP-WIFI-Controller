@@ -6,7 +6,7 @@ FIL file;						/* 檔案物件 */
 FRESULT f_res;					/* 檔案操作結果 */
 UINT fnum;						/* 成功讀寫的位元組數 */
 BYTE ReadBuffer[1024] = {0};	/* 讀取緩衝區 */
-BYTE WriteBuffer[] = "歡迎使用野火STM32開發板 今天是個好日子，新建檔案系統測試檔案\r\n";
+BYTE WriteBuffer[] = "STM32/SDIO/FATFS讀寫測試，目前波特率2,000,000，新建檔案系統測試檔案\r\n";
 
 void SDIO_FatFs_RW_Test() {
 	printf("\r\r\n****** 這是一個SD卡 檔案系統實驗 ******\r\r\n");

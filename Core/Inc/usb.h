@@ -49,4 +49,3 @@ void MX_USB_PCD_Init(void);
 #endif
 
 #endif /* __USB_H__ */
-

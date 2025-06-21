@@ -45,6 +45,7 @@
 
 
 void SystemClock_Config(void);
+
 void MX_FREERTOS_Init(void);
 
 /**
@@ -52,10 +53,8 @@ void MX_FREERTOS_Init(void);
   * @retval int
   */
 int main(void) {
-
 	/*------------BSP HAL INIT------------*/
 	HAL_Init();
-	LED_GPIO_Config();
 	SystemClock_Config();
 	MX_GPIO_Init();
 	MX_DMA_Init();
@@ -65,12 +64,10 @@ int main(void) {
 	MX_USB_PCD_Init();
 
 	/*------------CUSTOMIZE FUNC INIT------------*/
+	LED_GPIO_Config();
+	ESP32_Init();
 
-	/* USER CODE BEGIN 2 */
-	SDIO_FatFs_RW_Test();
-
-	/* USER CODE END 2 */
-
+	// SDIO_FatFs_RW_Test();
 	osKernelInitialize();
 	MX_FREERTOS_Init();
 	osKernelStart();
