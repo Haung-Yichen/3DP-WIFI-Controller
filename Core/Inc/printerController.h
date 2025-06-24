@@ -16,6 +16,12 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include "FreeRTOS.h"
+#include "semphr.h"
+
+extern SemaphoreHandle_t priOverSemaphore; //列印完成信號量
+
+void PrinterCTRL_PrintTask();
 
 
 #ifdef __cplusplus

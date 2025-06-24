@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "ledTask.h"
 #include "esp32.h"
+#include "UITask.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,6 +47,24 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+
+//UI主線程
+osThreadId_t UI_TaskHandle;
+const osThreadAttr_t UI_Task_attributes = {
+	.name = "UI_Task",
+	.stack_size = 128* 16,
+	.priority = (osPriority)osPriorityNormal7,
+};
+
+//觸控檢測線程
+osThreadId_t touchTaskHandle;
+const osThreadAttr_t touchTask_attributes = {
+	.name = "touchTask",
+	.stack_size = 128 * 2,
+	.priority = (osPriority)osPriorityAboveNormal,
+};
+
+//esp32 uart解析線程
 osThreadId_t esp32RxHandlerTaskHandle;
 const osThreadAttr_t esp32RxHandlerTask_attributes = {
 	.name = "esp32RxHandlerTask",
@@ -53,6 +72,7 @@ const osThreadAttr_t esp32RxHandlerTask_attributes = {
 	.priority = (osPriority) osPriorityHigh,
 };
 
+//調試用
 osThreadId_t ledTaskHandle;
 const osThreadAttr_t ledTask_attributes = {
 	.name = "ledTask",
@@ -108,6 +128,8 @@ void MX_FREERTOS_Init(void) {
 	defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
 	/* USER CODE BEGIN RTOS_THREADS */
+	UI_TaskHandle = osThreadNew(GUI_Task, NULL, &UI_Task_attributes);
+	touchTaskHandle = osThreadNew(touchTask, NULL, &touchTask_attributes);
 	esp32RxHandlerTaskHandle = osThreadNew(ESP32_RxHandler_Task, NULL, &esp32RxHandlerTask_attributes);
 	ledTaskHandle = osThreadNew(ledBlinkTask, NULL, &ledTask_attributes);
 	/* USER CODE END RTOS_THREADS */

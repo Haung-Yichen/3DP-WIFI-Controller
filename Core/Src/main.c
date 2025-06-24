@@ -24,6 +24,7 @@
 #include "usart.h"
 #include "usb.h"
 #include "gpio.h"
+#include "stm32f1xx_ll_fsmc.h"
 
 /*******   C LIB   *******/
 #include <stdio.h>
@@ -40,9 +41,22 @@
 #include "sdio_test.h"
 
 /*******   Custumize LIB   *******/
+#include "bsp_ili9341_lcd.h"
+#include "bsp_xpt2046_lcd.h"
 #include "cmdHandler.h"
 #include "Fatfs_SDIO_Test.h"
+#include "LCD.h"
 
+void LCD_TestInit(void) {
+
+
+	// 简单测试LCD是否正常工作
+	ILI9341_Write_Cmd(0x2C);  // 写入GRAM命令
+	for(int i=0; i<100; i++) {  // 只写部分像素测试
+		ILI9341_Write_Data(0xF800);  // 红色像素
+	}
+
+}
 
 void SystemClock_Config(void);
 
@@ -54,6 +68,7 @@ void MX_FREERTOS_Init(void);
   */
 int main(void) {
 	/*------------BSP HAL INIT------------*/
+
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
@@ -62,10 +77,13 @@ int main(void) {
 	MX_USART2_UART_Init();
 	MX_USART3_UART_Init();
 	MX_USB_PCD_Init();
+	__HAL_RCC_CRC_CLK_ENABLE();
 
 	/*------------CUSTOMIZE FUNC INIT------------*/
 	LED_GPIO_Config();
+	XPT2046_Init();
 	ESP32_Init();
+	LCD_X_Config();
 
 	// SDIO_FatFs_RW_Test();
 	osKernelInitialize();
@@ -125,7 +143,7 @@ void SystemClock_Config(void) {
   */
 void Error_Handler(void) {
 	__disable_irq();
-	printf("\r\n<UNK>\r\n");
+	printf("fault\r\n<UNK>\r\n");
 	while (1) {
 	}
 }

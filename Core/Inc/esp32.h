@@ -18,6 +18,7 @@
 #include "usart.h"
 #include "cmdList.h"
 #include "cmdHandler.h"
+#include "printerController.h"
 
 #define ESP32_USART_PORT   huart2
 #define ESP32_READY        "ok"
@@ -30,7 +31,9 @@ typedef enum {
 	ESP32_BUSY
 } ESP32_STATE_TypeDef;
 
-extern SemaphoreHandle_t rxSemaphore;
+extern SemaphoreHandle_t traOverSemaphore; //傳檔完成信號量
+extern SemaphoreHandle_t staPriSemaphore;  //開始列印信號量
+extern SemaphoreHandle_t rxSemaphore;      //UART啟動解析信號量
 
 // 內部狀態與緩衝區
 extern volatile uint16_t CRxLen;
@@ -48,11 +51,6 @@ void ESP32_Init(void);
  * @brief 註冊回調函數
  */
 void ESP32_RegCallback(void);
-
-/**
- * @brief 載入 G-code到SD卡中
- */
-void ESP32_LoadGcode2SD_Task(void);
 
 /**
  * @brief 傳回目前 ESP32 狀態
@@ -74,10 +72,6 @@ void ESP32_RxHandler_Task(void *argument);
  */
 void ESP32_ReturnClbkRes(void);
 
-/**
- * @brief 上傳資料到 3D 印表機
- */
-void ESP32_UploadToPrinter_Task(void);
 
 /************************************************
  *                 定義回調函數                  *

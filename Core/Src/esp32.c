@@ -2,6 +2,8 @@
 
 #include "cmsis_os2.h"
 
+SemaphoreHandle_t triOverSemaphore = NULL;
+SemaphoreHandle_t staPriSemaphore = NULL;
 SemaphoreHandle_t rxSemaphore = NULL;
 
 uint8_t *ResBuf = 0;
@@ -12,8 +14,11 @@ volatile uint16_t CRxLen = 0;
 
 void ESP32_Init(void) {
 	ESP32_SetState(ESP32_INIT);
-	rxSemaphore = xSemaphoreCreateBinary();
 	ESP32_RegCallback();
+
+	rxSemaphore = xSemaphoreCreateBinary();
+	triOverSemaphore = xSemaphoreCreateBinary();
+	staPriSemaphore = xSemaphoreCreateBinary();
 
 	HAL_UART_Receive_DMA(&ESP32_USART_PORT, CRxBuf, sizeof(CRxBuf));
 	__HAL_UART_ENABLE_IT(&ESP32_USART_PORT, UART_IT_IDLE);
@@ -39,9 +44,6 @@ void ESP32_RegCallback(void) {
 	register_command(CMD_Emergency_Stop, EmergencyStopCmdHandler);
 }
 
-void ESP32_LoadGcode2SD_Task(void) {
-}
-
 ESP32_STATE_TypeDef ESP32_GetState(void) {
 	return currentState;
 }
@@ -65,31 +67,35 @@ void ESP32_ReturnClbkRes(void) {
 	HAL_UART_Transmit_DMA(&ESP32_USART_PORT, ResBuf, sizeof(ResBuf));
 }
 
-void ESP32_UploadToPrinter_Task(void) {
-	ESP32_SetState(ESP32_BUSY);
-	// 傳送資料邏輯
-}
-
 void StartTransmissionCmdHandler(const char *args, void *res) {
+#ifdef DEBUG
+	printf("Start Transmitting...\r\n");
+#endif
+	//實作接收邏輯以及把資料存入SD卡
 	ESP32_SetState(ESP32_BUSY);
-	printf("StartTransmissionCmdHandler\n");
+
 	ESP32_SetState(ESP32_IDLE);
 }
 
 void TransmissionOverCmdHandler(const char *args, void *res) {
-	ESP32_SetState(ESP32_IDLE);
+	//通知UI線程傳送完畢
+	xSemaphoreGive(triOverSemaphore);
 }
 
 void StartToPrintCmdHandler(const char *args, void *res) {
-	// TODO: 實作開始列印邏輯
+#ifdef DEBUG
+	printf("Start Printing...\r\n");
+#endif
+	//通知印表機控制器開始列印
+	xSemaphoreGive(staPriSemaphore);
 }
 
 void PausePrintingCmdHandler(const char *args, void *res) {
-	// TODO: 實作暫停列印邏輯
+	//通知印表機控制器暫停發送gcode
 }
 
 void StopPrintingCmdHandler(const char *args, void *res) {
-	// TODO: 實作停止列印邏輯
+	//清空列印計數器，印表機回原點
 }
 
 void GoHomeCmdHandler(const char *args, void *res) {
