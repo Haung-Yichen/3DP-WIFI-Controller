@@ -39,8 +39,6 @@ add_executable(${CMAKE_PROJECT_NAME}
         Core/led/bsp_led.c
         Core/FatFs/drivers/sd_diskio.c
         Core/FatFs/drivers/sd_diskio.h
-        Core/FatFs/option/syscall.c
-        Core/FatFs/option/ccsbcs.c
         Core/FatFs/diskio.c
         Core/FatFs/ff.c
         Core/FatFs/ff_gen_drv.c
@@ -173,6 +171,7 @@ add_executable(${CMAKE_PROJECT_NAME}
         Core/STemWin/UITask.c
         Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_sram.c
         Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_fsmc.c
+        Core/FatFs/option/unicode.c
 )
 
 # Add STM32CubeMX generated sources

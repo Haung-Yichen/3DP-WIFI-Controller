@@ -91,7 +91,6 @@ void GUI_X_Config(void) {
 #else
 	GUI_ALLOC_AssignMemory(extMem, GUI_NUMBYTES);
 #endif
-  printf("gui_x_config ok\r\n");
 }
 
 /*************************** End of file ****************************/

@@ -49,8 +49,6 @@ Purpose     : Display controller configuration (single layer)
 #include "GUI.h"
 #include "GUIDRV_FlexColor.h"
 #include "bsp_ili9341_lcd.h"
-#include "usart.h"
-#include <stdio.h>
 /*********************************************************************
 *
 *       Layer configuration (to be modified)
@@ -58,13 +56,14 @@ Purpose     : Display controller configuration (single layer)
 **********************************************************************
 */
 
+
 //
 // Physical display size
 //
-#define XSIZE_PHYS  macILI9341_Default_Max_Width // To be adapted to x-screen size
-#define YSIZE_PHYS  macILI9341_Default_Max_Heigth // To be adapted to y-screen size
+#define XSIZE_PHYS  ILI9341_LESS_PIXEL // To be adapted to x-screen size
+#define YSIZE_PHYS  ILI9341_MORE_PIXEL // To be adapted to y-screen size
 
-#define TOUCH_AD_TOP 	 				3670  //YPhys0
+#define TOUCH_AD_TOP 	 			3670  //YPhys0
 #define TOUCH_AD_BOTTOM  			223   //YPhys1
 #define TOUCH_AD_LEFT 	 			208   //XPhys0
 #define TOUCH_AD_RIGHT 	 			3492  //XPhys1
@@ -108,8 +107,7 @@ Purpose     : Display controller configuration (single layer)
 *   Sets display register
 */
 static void LcdWriteReg(U16 Data) {
-	// ... TBD by user
-	macFSMC_ILI9341_REG = Data; //modify by fire
+	ILI9341_Write_Cmd(Data);
 }
 
 /********************************************************************
@@ -120,8 +118,7 @@ static void LcdWriteReg(U16 Data) {
 *   Writes a value to a display register
 */
 static void LcdWriteData(U16 Data) {
-	// ... TBD by user
-	macFSMC_ILI9341_RAM = Data; //modify by fire
+	ILI9341_Write_Data(Data);
 }
 
 /********************************************************************
@@ -133,8 +130,7 @@ static void LcdWriteData(U16 Data) {
 */
 static void LcdWriteDataMultiple(U16 *pData, int NumItems) {
 	while (NumItems--) {
-		// ... TBD by user
-		macFSMC_ILI9341_RAM = *pData++; //modify by fire
+		ILI9341_Write_Data(*pData++);
 	}
 }
 
@@ -146,12 +142,11 @@ static void LcdWriteDataMultiple(U16 *pData, int NumItems) {
 *   Reads multiple values from a display register.
 */
 static void LcdReadDataMultiple(U16 *pData, int NumItems) {
-	/* ����ili9341��ȡ�ĵ�һ������Ϊ��Ч����
-	(ԭ��û��ʹ��config.numdummyreads������ʱ����Ҫ������)*/
-	//*pData = ILI9341_RAM;
+	/* 舍弃ili9341读取的第一个数据为无效数据 */
+	volatile U16 dummy = ILI9341_Read_Data(); // 读取并丢弃第一个数据
+
 	while (NumItems--) {
-		// ... TBD by user
-		*pData++ = macFSMC_ILI9341_RAM; //modify by fire
+		*pData++ = ILI9341_Read_Data();
 	}
 }
 
@@ -171,17 +166,13 @@ static void LcdReadDataMultiple(U16 *pData, int NumItems) {
 *
 */
 void LCD_X_Config(void) {
-	printf("lcd_x initing...\r\n");
 	GUI_DEVICE *pDevice;
 	CONFIG_FLEXCOLOR Config = {0};
 	GUI_PORT_API PortAPI = {0};
 	//
 	// Set display driver and color conversion
 	//
-
-////卡在這裡
-
-	pDevice = GUI_DEVICE_CreateAndLink(GUIDRV_FLEXCOLOR, GUICC_M565, 0, 0);
+	pDevice = GUI_DEVICE_CreateAndLink(GUIDRV_FLEXCOLOR, GUICC_565, 0, 0);
 	//
 	// Display driver configuration, required for Lin-driver
 	//
@@ -192,9 +183,9 @@ void LCD_X_Config(void) {
 	//
 	Config.FirstCOM = 0; //modify by fire
 	Config.FirstSEG = 0; //modify by fire
-	// Config.Orientation = GUI_MIRROR_Y|GUI_MIRROR_X;								//modify by fire ����
-	Config.Orientation = GUI_SWAP_XY | GUI_MIRROR_Y; //modify by fire ����
-	Config.NumDummyReads = 2; //modify by fire ��ȡ�ĵڶ������ݲ�����ʵ����
+	// Config.Orientation = GUI_MIRROR_Y|GUI_MIRROR_X;								//modify by fire 竖屏
+	Config.Orientation = GUI_SWAP_XY | GUI_MIRROR_Y; //modify by fire 横屏
+	Config.NumDummyReads = 1; //modify by fire 读取的第二个数据才是真实数据
 
 	GUIDRV_FlexColor_Config(pDevice, &Config);
 	//
@@ -207,15 +198,15 @@ void LCD_X_Config(void) {
 	GUIDRV_FlexColor_SetFunc(pDevice, &PortAPI, GUIDRV_FLEXCOLOR_F66709, GUIDRV_FLEXCOLOR_M16C0B16);
 	//modify by fire GUIDRV_FLEXCOLOR_F66708
 
-	/*���ô���ԭ�� */
+	/*设置触摸原点 */
 	GUI_TOUCH_SetOrientation((GUI_MIRROR_X * LCD_GetMirrorXEx(0)) |
 	                         (GUI_MIRROR_Y * LCD_GetMirrorYEx(0)) |
 	                         (GUI_SWAP_XY * LCD_GetSwapXYEx(0)));
 
-	/*���ô���У׼ */
+	/*设置触摸校准 */
 	GUI_TOUCH_Calibrate(GUI_COORD_X, 0, 240 - 1, TOUCH_AD_RIGHT,TOUCH_AD_LEFT);
 	GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, 320 - 1,TOUCH_AD_BOTTOM,TOUCH_AD_TOP);
-	printf("lcd_c_conf ok\r\n");
+	printf("lcd_x_config ok\r\n");
 }
 
 /*********************************************************************
@@ -243,7 +234,7 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void *pData) {
 	int r;
 	(void) LayerIndex;
 	(void) pData;
-	printf("lcd_x_dispDrv initing...\r\n");
+
 	switch (Cmd) {
 		case LCD_X_INITCONTROLLER: {
 			/* Called during the initialization process in order to set

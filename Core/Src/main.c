@@ -82,10 +82,9 @@ int main(void) {
 	/*------------CUSTOMIZE FUNC INIT------------*/
 	LED_GPIO_Config();
 	XPT2046_Init();
-	ESP32_Init();
-	LCD_X_Config();
+	// ESP32_Init();
+	SDIO_FatFs_RW_Test();
 
-	// SDIO_FatFs_RW_Test();
 	osKernelInitialize();
 	MX_FREERTOS_Init();
 	osKernelStart();

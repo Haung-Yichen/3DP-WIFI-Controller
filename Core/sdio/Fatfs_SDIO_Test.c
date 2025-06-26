@@ -1,4 +1,7 @@
 #include "Fatfs_SDIO_Test.h"
+#include "ff_print_err.h"
+
+#define TEST_FILE_NAME "test file.txt"
 
 char SDPath[4];					/* SD卡邏輯裝置路徑 */
 FATFS fs;						/* FatFs檔案系統物件 */
@@ -35,9 +38,9 @@ void SDIO_FatFs_RW_Test() {
 		}
 
 		printf("****** 即將進行檔案寫入測試... ******\r\n");
-		f_res = f_open(&file, "FatFs test file.txt", FA_CREATE_ALWAYS | FA_WRITE);
+		f_res = f_open(&file, TEST_FILE_NAME, FA_CREATE_ALWAYS | FA_WRITE);
 		if (f_res == FR_OK) {
-			printf("》開啟/創建 FatFs test file.txt 檔案成功，向檔案寫入資料。\r\n");
+			printf("》開啟/創建 %s 檔案成功，向檔案寫入資料。\r\n", TEST_FILE_NAME);
 			f_res = f_write(&file, WriteBuffer, sizeof(WriteBuffer), &fnum);
 			if (f_res == FR_OK) {
 				printf("》檔案寫入成功，寫入位元組數據：%d\r\n", fnum);
@@ -49,9 +52,10 @@ void SDIO_FatFs_RW_Test() {
 		} else {
 			printf("！！開啟/創建檔案失敗。\r\n");
 		}
-
+		HAL_Delay(10); //不加延遲讀取不穩定
 		printf("****** 即將進行檔案讀取測試... ******\r\n");
-		f_res = f_open(&file, "FatFs test file.txt", FA_OPEN_EXISTING | FA_READ);
+		f_res = f_open(&file, TEST_FILE_NAME, FA_OPEN_EXISTING | FA_READ);
+		printf_fatfs_error(f_res);
 		if (f_res == FR_OK) {
 			printf("》開啟檔案成功。\r\n");
 			f_res = f_read(&file, ReadBuffer, sizeof(ReadBuffer), &fnum);
