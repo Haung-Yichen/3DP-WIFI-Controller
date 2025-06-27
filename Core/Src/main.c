@@ -45,7 +45,9 @@
 #include "bsp_xpt2046_lcd.h"
 #include "cmdHandler.h"
 #include "Fatfs_SDIO_Test.h"
+#include "GUI.h"
 #include "LCD.h"
+#include "Touch_Calibration.h"
 
 void LCD_TestInit(void) {
 
@@ -67,8 +69,8 @@ void MX_FREERTOS_Init(void);
   * @retval int
   */
 int main(void) {
-	/*------------BSP HAL INIT------------*/
 
+	/*------------BSP HAL INIT------------*/
 	HAL_Init();
 	SystemClock_Config();
 	MX_GPIO_Init();
@@ -84,6 +86,8 @@ int main(void) {
 	XPT2046_Init();
 	// ESP32_Init();
 	SDIO_FatFs_RW_Test();
+	GUI_Init();
+	// TOUCH_First_Calibrate();
 
 	osKernelInitialize();
 	MX_FREERTOS_Init();

@@ -27,14 +27,14 @@ Requirements: WindowManager - (X)
 */
 
 #include "DIALOG.h"
-
+#include "Touch_Calibration.h"
 /*********************************************************************
 *
 *       Defines
 *
 **********************************************************************
 */
-#define NUM_CALIB_POINTS  5  //Ð£×¼µãÊý
+#define NUM_CALIB_POINTS  5  //Ð£×¼ï¿½ï¿½ï¿½ï¿½
 
 /*********************************************************************
 *
@@ -55,7 +55,7 @@ static int _aSamY[NUM_CALIB_POINTS];
 */
 /*********************************************************************
 *
-*       Ê¹ÓÃÕâ¸öÀ´¶ÁÈ¡ADCµÄÖµ
+*       Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ADCï¿½ï¿½Öµ
 */
 void TOUCH_First_Calibrate(void) {
   GUI_CURSOR_Show();
@@ -108,7 +108,7 @@ static void _Calibrate(void) {
   xSize = LCD_GetXSize();
   ySize = LCD_GetYSize();
   
-  /* ¸ù¾ÝLCD³ß´ç¼ÆËã²Î¿¼µã */
+  /* ï¿½ï¿½ï¿½ï¿½LCDï¿½ß´ï¿½ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ */
   _aRefX[0] = (xSize * 5) / 100;
   _aRefY[0] = (ySize * 5) / 100;
   _aRefX[1] = xSize - (xSize * 5) / 100;
@@ -120,7 +120,7 @@ static void _Calibrate(void) {
   _aRefX[4] = xSize / 2;
   _aRefY[4] = ySize / 2;
   
-  /* ÔÚLCDÉÏ»æÖÆ²Î¿¼µã */
+  /* ï¿½ï¿½LCDï¿½Ï»ï¿½ï¿½Æ²Î¿ï¿½ï¿½ï¿½ */
   GUI_TOUCH_GetState(&State);
   State.Pressed = 0;
   GUI_SetPenSize(3);
@@ -133,7 +133,7 @@ static void _Calibrate(void) {
       GUI_TOUCH_GetState(&State);
     }
     if (State.Pressed == 1) {
-      /* ´¢´æ²ÉÑùµã */
+      /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
       _aSamX[i] = GUI_TOUCH_GetxPhys();
       _aSamY[i] = GUI_TOUCH_GetyPhys();
     }
@@ -141,7 +141,7 @@ static void _Calibrate(void) {
     GUI_Delay(250);
   }
   
-  /* ½«²âÁ¿µã´«µÝ¸øemWin */
+  /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã´«ï¿½Ý¸ï¿½emWin */
   GUI_TOUCH_CalcCoefficients(NUM_CALIB_POINTS, _aRefX, _aRefY, _aSamX, _aSamY, xSize, ySize);
 }
 

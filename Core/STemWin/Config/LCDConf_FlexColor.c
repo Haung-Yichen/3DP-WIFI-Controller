@@ -185,7 +185,7 @@ void LCD_X_Config(void) {
 	Config.FirstSEG = 0; //modify by fire
 	// Config.Orientation = GUI_MIRROR_Y|GUI_MIRROR_X;								//modify by fire 竖屏
 	Config.Orientation = GUI_SWAP_XY | GUI_MIRROR_Y; //modify by fire 横屏
-	Config.NumDummyReads = 1; //modify by fire 读取的第二个数据才是真实数据
+	Config.NumDummyReads = 2; //modify by fire 读取的第二个数据才是真实数据
 
 	GUIDRV_FlexColor_Config(pDevice, &Config);
 	//
@@ -206,7 +206,6 @@ void LCD_X_Config(void) {
 	/*设置触摸校准 */
 	GUI_TOUCH_Calibrate(GUI_COORD_X, 0, 240 - 1, TOUCH_AD_RIGHT,TOUCH_AD_LEFT);
 	GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, 320 - 1,TOUCH_AD_BOTTOM,TOUCH_AD_TOP);
-	printf("lcd_x_config ok\r\n");
 }
 
 /*********************************************************************

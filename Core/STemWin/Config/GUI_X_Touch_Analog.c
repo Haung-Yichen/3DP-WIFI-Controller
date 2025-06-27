@@ -32,31 +32,125 @@ Purpose     : Config / System dependent externals for GUI
 */
 #include "GUI.h"
 #include "bsp_xpt2046_lcd.h"
+#include "bsp_ili9341_lcd.h"
 
+//modify by fire 此文件的函數為將觸摸屏與emWin對接的函數
 
-//modify by fire ���ļ��ĺ���Ϊ������������emWin�ϲ����
+// 全局變量用於儲存觸摸狀態
+static int LastTouchX = 0;
+static int LastTouchY = 0;
+static uint8_t TouchDetected = 0;
 
-
-void GUI_TOUCH_X_ActivateX(void) 
+/*********************************************************************
+*
+*       GUI_TOUCH_X_ActivateX
+*
+* Purpose:
+*   Called from GUI, if touch support is enabled.
+*   Switches on voltage on X-axis,
+*   prepares measurement of Y-axis.
+*   Voltage on Y-axis is switched off.
+*/
+void GUI_TOUCH_X_ActivateX(void)
 {
- // XPT2046_WriteCMD(0x90);
+    // XPT2046使用差分測量方式，不需要單獨激活X軸
+    // 這個函數在XPT2046中可以留空
 }
 
-
+/*********************************************************************
+*
+*       GUI_TOUCH_X_ActivateY
+*
+* Purpose:
+*   Called from GUI, if touch support is enabled.
+*   Switches on voltage on Y-axis,
+*   prepares measurement of X-axis.
+*   Voltage on X-axis is switched off.
+*/
 void GUI_TOUCH_X_ActivateY(void)
 {
-  //XPT2046_WriteCMD(0xd0);
+    // XPT2046使用差分測量方式，不需要單獨激活Y軸
+    // 這個函數在XPT2046中可以留空
 }
 
-
-int  GUI_TOUCH_X_MeasureX(void) 
+/*********************************************************************
+*
+*       GUI_TOUCH_X_MeasureX
+*
+* Purpose:
+*   Return the X-value of the currently selected position.
+*   Return value is either the X-value in pixels, or -1 if not pressed.
+*
+* Notes:
+*   This routine is called periodically by the GUI.
+*   It is therefore recommended to:
+*   a) Return 0 if no measurement is possible
+*   b) Make sure that measurements are consistent
+*/
+int GUI_TOUCH_X_MeasureX(void)
 {
-    return XPT2046_ReadAdc_Fliter(macXPT2046_CHANNEL_Y);
+    strType_XPT2046_Coordinate touchCoordinate;
 
+    // 檢測觸摸狀態
+    if(XPT2046_TouchDetect() == TOUCH_PRESSED && TouchDetected)
+    {
+        // 獲取觸摸坐標
+        if(XPT2046_Get_TouchedPoint(&touchCoordinate, strXPT2046_TouchPara))
+        {
+            // 檢查坐標是否在有效範圍內
+            if(touchCoordinate.y >= 0 && touchCoordinate.y < LCD_Y_LENGTH)
+            {
+                LastTouchY = touchCoordinate.y;
+                return LastTouchY;
+            }
+        }
+    }
+    else if(!TouchDetected)
+    {
+        LastTouchY = 0;
+    }
+
+    return LastTouchY;  // 返回上次的Y坐標或-1
 }
 
-int  GUI_TOUCH_X_MeasureY(void) 
-{	
-    return XPT2046_ReadAdc_Fliter(macXPT2046_CHANNEL_X);
-}
+/*********************************************************************
+*
+*       GUI_TOUCH_X_MeasureY
+*
+* Purpose:
+*   Return the Y-value of the currently selected position.
+*   Return value is either the Y-value in pixels, or -1 if not pressed.
+*
+* Notes:
+*   This routine is called periodically by the GUI.
+*   It is therefore recommended to:
+*   a) Return 0 if no measurement is possible
+*   b) Make sure that measurements are consistent
+*/
+int GUI_TOUCH_X_MeasureY(void)
+{
+    strType_XPT2046_Coordinate touchCoordinate;
 
+    // 檢測觸摸狀態
+    if(XPT2046_TouchDetect() == TOUCH_PRESSED)
+    {
+        // 獲取觸摸坐標
+        if(XPT2046_Get_TouchedPoint(&touchCoordinate, strXPT2046_TouchPara))
+        {
+            // 檢查坐標是否在有效範圍內
+            if(touchCoordinate.x >= 0 && touchCoordinate.x < LCD_X_LENGTH)
+            {
+                LastTouchX = touchCoordinate.x;
+                TouchDetected = 1;
+                return LastTouchX;
+            }
+        }
+    }
+    else
+    {
+        TouchDetected = 0;
+        LastTouchX = 0;
+    }
+
+    return -1;  // 無觸摸或無效觸摸
+}

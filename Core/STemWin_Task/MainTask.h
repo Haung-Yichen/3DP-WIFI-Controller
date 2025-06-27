@@ -4,6 +4,6 @@
 #include "GUI.h"
 #include "DIALOG.h"
 
-void MainTask(void);
+void TestTask(void);
 
 #endif /* __MAINTASK_H */

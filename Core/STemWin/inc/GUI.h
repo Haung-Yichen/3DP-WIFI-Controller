@@ -381,7 +381,7 @@ GUI_DRAWMODE     GUI_SetDrawMode          (GUI_DRAWMODE dm);
 void             GUI_SetScreenSizeX       (int xSize);
 void             GUI_SetScreenSizeY       (int ySize);
 void             GUI_SetRefreshHook       (void (* pFunc)(void));
-void             MainTask                 (void);
+void             TestTask                 (void);
 
 #define GUI_PID_SetInitFunc(x) GUI_SetAfterInitHook(x)  // Compatibility
 

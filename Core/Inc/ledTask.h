@@ -7,12 +7,12 @@
 void ledBlinkTask(void *argument) {
 	/* USER CODE BEGIN ledBlinkTask */
 	while (1) {
-		static uint32_t i = 0;
-		LED_RED; // Turn on red LED
-		osDelay(500); // Delay for 500 ms
-		LED_RGBOFF; // Turn off all LEDs
-		osDelay(500); // Delay for 500 ms
-		printf("%i\r\n", i++);
+		// static uint32_t i = 0;
+		// LED_RED; // Turn on red LED
+		// osDelay(500); // Delay for 500 ms
+		// LED_RGBOFF; // Turn off all LEDs
+		// osDelay(500); // Delay for 500 ms
+		// printf("%i\r\n", i++);
 	}
 	/* USER CODE END ledBlinkTask */
 }

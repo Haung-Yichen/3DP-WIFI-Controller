@@ -1,9 +1,7 @@
 #ifndef TOUCHTASK_H
 #define TOUCHTASK_H
 
-#include "FreeRTOS.h"
-#include "GUI.h"
-#include "task.h"
+
 
 /**
   * @brief 触摸检测任务主体

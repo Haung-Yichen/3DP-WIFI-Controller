@@ -24,7 +24,7 @@ typedef enum {
 
 const char *pText = "emWin Test";
 
-void MainTask(void) {
+void TestTask(void) {
     GUI_SetBkColor(GUI_WHITE);
     GUI_SetColor(GUI_RED);
     GUI_SetFont(&GUI_Font24B_1);

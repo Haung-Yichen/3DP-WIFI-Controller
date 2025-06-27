@@ -49,7 +49,7 @@
 /* USER CODE BEGIN Variables */
 
 //UI主線程
-osThreadId_t UI_TaskHandle;
+osThreadId_t UITaskHandle;
 const osThreadAttr_t UI_Task_attributes = {
 	.name = "UI_Task",
 	.stack_size = 128* 16,
@@ -57,11 +57,11 @@ const osThreadAttr_t UI_Task_attributes = {
 };
 
 //觸控檢測線程
-osThreadId_t touchTaskHandle;
-const osThreadAttr_t touchTask_attributes = {
-	.name = "touchTask",
-	.stack_size = 128 * 2,
-	.priority = (osPriority)osPriorityAboveNormal,
+osThreadId_t TouchTaskHandle;
+const osThreadAttr_t Touch_Task_attributes = {
+	.name = "Touch_Task",
+	.stack_size = 128* 8,
+	.priority = (osPriority)osPriorityNormal7,
 };
 
 //esp32 uart解析線程
@@ -76,7 +76,7 @@ const osThreadAttr_t esp32RxHandlerTask_attributes = {
 osThreadId_t ledTaskHandle;
 const osThreadAttr_t ledTask_attributes = {
 	.name = "ledTask",
-	.stack_size = 128 * 4,
+	.stack_size = 128 * 2,
 	.priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE END Variables */
@@ -84,7 +84,7 @@ const osThreadAttr_t ledTask_attributes = {
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
 	.name = "defaultTask",
-	.stack_size = 128 * 4,
+	.stack_size = 128 * 1,
 	.priority = (osPriority_t) osPriorityNormal,
 };
 
@@ -128,10 +128,29 @@ void MX_FREERTOS_Init(void) {
 	defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
 	/* USER CODE BEGIN RTOS_THREADS */
-	UI_TaskHandle = osThreadNew(GUI_Task, NULL, &UI_Task_attributes);
-	touchTaskHandle = osThreadNew(touchTask, NULL, &touchTask_attributes);
+	UITaskHandle = osThreadNew(GUI_Task, NULL, &UI_Task_attributes);
+	TouchTaskHandle = osThreadNew(touchTask, NULL, &Touch_Task_attributes);
 	esp32RxHandlerTaskHandle = osThreadNew(ESP32_RxHandler_Task, NULL, &esp32RxHandlerTask_attributes);
 	ledTaskHandle = osThreadNew(ledBlinkTask, NULL, &ledTask_attributes);
+
+	//任務建立結果檢查
+#ifdef DEBUG
+	if (defaultTaskHandle == NULL) {
+		printf("defaultTaskHandle created failed!!\r\n");
+	}
+	if (UITaskHandle == NULL) {
+		printf("UITaskHandle created failed!!\r\n");
+	}
+	if (TouchTaskHandle == NULL) {
+		printf("TouchTaskHandle created failed!!\r\n");
+	}
+	if (esp32RxHandlerTaskHandle == NULL) {
+		printf("esp32RxHandlerTaskHandle created failed!!\r\n");
+	}
+	if (ledTaskHandle == NULL) {
+		printf("ledTaskHandle created failed!!\r\n");
+	}
+#endif
 	/* USER CODE END RTOS_THREADS */
 
 	/* USER CODE BEGIN RTOS_EVENTS */

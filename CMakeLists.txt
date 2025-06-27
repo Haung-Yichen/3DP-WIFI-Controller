@@ -164,14 +164,18 @@ add_executable(${CMAKE_PROJECT_NAME}
         Core/STemWin/OS/GUI_X_FreeRTOS.c
         Core/STemWin_Task/MainTask.c
         Core/STemWin_Task/MainTask.h
-        Core/STemWin_Task/ScreenShot.c
-        Core/STemWin_Task/ScreenShot.h
         Core/STemWin_Task/Touch_calibration.c
         Core/STemWin/UITask.h
         Core/STemWin/UITask.c
         Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_sram.c
         Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_fsmc.c
         Core/FatFs/option/unicode.c
+        Core/STemWin_Task/FramewinDLG.h
+        Core/STemWin_Task/Page1DLG.c
+        Core/STemWin_Task/Page2DLG.c
+        Core/STemWin_Task/Page3DLG.c
+        Core/STemWin_Task/Page4DLG.c
+        Core/STemWin_Task/Touch_Calibration.h
 )
 
 # Add STM32CubeMX generated sources
